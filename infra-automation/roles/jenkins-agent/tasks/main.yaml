@@ -1,0 +1,27 @@
+- name: Ensure Directory Exists
+  file:
+    path: /opt/{{ jenkins_agent_container_name }}
+    state: directory
+    mode: '0755'
+
+- name: Generate docker-compose.yaml from template
+  template:
+    src: "docker-compose.yaml.j2"
+    dest: "/opt/{{ jenkins_agent_container_name }}/docker-compose.yaml"
+
+- name: Ensure Directory Exists
+  copy:
+    src: sshd_config
+    dest: "/opt/{{ jenkins_agent_container_name }}"
+
+- name: Run Docker Compose
+  community.docker.docker_compose_v2:
+    project_src: "/opt/{{ jenkins_agent_container_name }}"
+    state: present
+
+- name: Down Docker Compose
+  community.docker.docker_compose_v2:
+    project_src: "/opt/{{ jenkins_agent_container_name }}"
+    state: absent
+  tags:
+    - down

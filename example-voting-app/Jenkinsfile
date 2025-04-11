@@ -1,0 +1,210 @@
+pipeline {
+    agent any
+    environment {
+      REGISTERY ='192.168.1.105:5000'
+      IMAGE = "${env.JOB_NAME}"
+      PRODUCT_ID = '3'
+      DOJO_URL = '192.168.1.104:8080'
+      ENGAGEMENT_ID = '3'
+      PRODUCT_NAME = 'vote'
+    }
+    
+    stages {
+        stage('checkout') {
+            steps {
+              git branch: 'master', credentialsId: 'gitlab-project' , url: 'http://192.168.1.109/root/voting-app.git'
+                }
+            }
+
+        stage('Get Tag'){
+          steps {
+            script{
+              env.GIT_TAG=sh(
+                script: "git tag --contains | head -1",
+                returnStdout: true).split('-')[0]
+            }
+          }
+        }
+        stage('git tag show'){
+            steps {
+              sh ''' echo $GIT_TAG '''
+            } 
+        }
+
+        stage('Get Short SHA'){
+          steps {
+            script {
+              env.CI_COMMIT_SHORT_SHA=sh(
+                script:'git rev-parse --short HEAD',
+                returnStdout: true).trim()
+            }
+          }
+        }
+
+        stage('Check Dockerfile'){
+            steps {
+              catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+              sh ''' docker run --rm  -v /opt/jenkins_data/home/workspace/$IMAGE/$GIT_TAG:/repo 192.168.1.105:5000/conftest:0.0.1 test -o json --policy image.rego /repo/Dockerfile '''
+              }
+            } 
+          }
+/*
+        stage('Add Issue To Jira'){
+            steps {
+              withCredentials([vaultString(credentialsId: 'jira_token', variable: 'jira')]) {
+                  sh ''' docker run --rm 192.168.1.105:5000/auto-jira:0.0.2 -project_key "PYT" -summary "Fix Dockerfile" -description "Need To Check Dockerfile Again" -jira_token $jira -jira_addr http://192.168.1.104:8085 '''
+              }
+            } 
+        }
+*/
+
+        stage('git secret'){
+            steps {
+              sh ''' docker run  --rm  -v "/opt/jenkins_data/home/workspace/$IMAGE/$GIT_TAG:/repo" 192.168.1.105:5000/trufflehog:latest gitlab --repo="http://192.168.1.109/root/voting-app.git" --token="glpat-dWehPxCzqyE3B161PooQ" --json > trufflehog.json '''
+            } 
+        }
+/*
+        stage('Upload Scan Trufflehog') {
+            steps {
+                withCredentials([vaultString(credentialsId: 'DOJO_KEY', variable: 'DOJO_KEY')]) {
+                sh ''' docker run --rm -v "/opt/jenkins_data/home/workspace/suggest-api:/repo"  $REGISTERY/defect-dojo:0.0.1 -url $DOJO_URL -api $DOJO_KEY -product-id $PRODUCT_ID -engagement-id $ENGAGEMENT_ID -scan-type "Trufflehog Scan" -engagement_name $IMAGE -file-path /repo/trufflehog.json -product-name $PRODUCT_NAME '''
+                }
+            }
+        }
+*/
+
+        stage('git leaks'){
+            steps {
+              catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                sh ''' docker run --rm -v "/opt/jenkins_data/home/workspace/$IMAGE/$GIT_TAG:/repo" $REGISTERY/gitleaks detect --source="/repo" --report-format="json" --report-path="/repo/gitleaks.json" '''
+              }
+            }
+        }
+/*
+        stage('Upload Scan Gitleaks') {
+            steps {
+                withCredentials([vaultString(credentialsId: 'DOJO_KEY', variable: 'DOJO_KEY')]) {
+                  sh ''' docker run --rm -v "/opt/jenkins_data/home/workspace/suggest-api:/repo"  $REGISTERY/defect-dojo:0.0.1 -url $DOJO_URL -api $DOJO_KEY -product-id $PRODUCT_ID -engagement-id $ENGAGEMENT_ID -scan-type "Gitleaks Scan" -engagement_name $IMAGE -file-path /repo/gitleaks.json -product-name $PRODUCT_NAME '''
+                }
+            }
+        }
+*/
+/*
+        stage('Sonar-Scanner') {
+            steps {
+              withCredentials([vaultString(credentialsId: 'SONAR', variable: 'SONAR')]) {
+                  sh ''' docker run --rm -e SONAR_HOST_URL="http://192.168.1.105:9000" -e SONAR_SCANNER_OPTS="-Dsonar.projectKey=${IMAGE} -Dsonar.login=${SONAR}" -v $PWD:/usr/src sonarsource/sonar-scanner-cli '''
+              }
+            }
+        }
+*/
+
+        stage('Build') {
+            steps {
+              sh ''' cd $GIT_TAG && docker build -t $REGISTERY/$GIT_TAG:$CI_COMMIT_SHORT_SHA . '''
+            }
+        }
+
+        stage('Login Registery') {
+            steps {
+                withCredentials([[$class: 'VaultUsernamePasswordCredentialBinding', credentialsId: 'local_registery', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME']]) {
+                    sh ''' docker login 192.168.1.105:5000 -u $USERNAME -p $PASSWORD '''
+                }
+            }
+        }
+/*
+        stage('grype'){
+            steps {
+              catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                sh ''' docker run --rm  -v /var/run/docker.sock:/var/run/docker.sock --name Grype 192.168.1.105:5000/grype:v0.86.1 -o json $REGISTERY/$GIT_TAG:$CI_COMMIT_SHORT_SHA > grype.json '''
+                }
+              }
+        }
+/*
+        stage('Upload Scan grype') {
+            steps {
+                script {
+                    sh ''' docker run --rm -v "/opt/jenkins_data/home/workspace/$IMAGE:/repo"  $REGISTERY/defect-dojo:0.0.1 -url $DOJO_URL -api $DOJO_KEY -product-id $PRODUCT_ID -engagement-id $ENGAGEMENT_ID -scan-type "Anchore Grype" -engagement_name $IMAGE -file-path /repo/gitleaks.json -product-name $PRODUCT_NAME '''
+                }
+            }
+        }
+*/
+/*
+        stage('Trivy'){ 
+            steps{
+                sh ''' docker run --rm -v $PWD:/app -v /var/run/docker.sock:/var/run/docker.sock $REGISTERY/trivy image -f json -o /app/trivy.json  $REGISTERY/$GIT_TAG:$CI_COMMIT_SHORT_SHA'''
+            }
+        }
+/*
+        stage('Upload Scan Trivy') {
+            steps {
+                script {
+                    sh ''' docker run -v "$PWD:/repo"  $REGISTERY/defect-dojo:0.0.1 -url $DOJO_URL -api $DOJO_KEY -product-id $PRODUCT_ID -engagement-id $ENGAGEMENT_ID -scan-type "Trivy Scan" -engagement_name $IMAGE -file-path /repo/trivy.json -product-name $PRODUCT_NAME '''
+                }
+            }
+        }
+*/
+
+        stage('Push To Docker Registries') {
+            steps {
+              sh ''' docker push $REGISTERY/$GIT_TAG:$CI_COMMIT_SHORT_SHA '''
+            }
+        }
+        stage('Create Artifact') {
+            steps {
+              sh ''' echo $GIT_TAG:$CI_COMMIT_SHORT_SHA > artifact'''
+            }
+        }
+        stage('Build Artifact'){
+             steps {
+                 archiveArtifacts artifacts: 'artifact', allowEmptyArchive: true
+             }
+         }
+/*        
+        stage('Deploy') {
+            steps {
+               sh ''' kubectl set image deployment/$IMAGE $IMAGE=$REGISTERY/$IMAGE:$CI_COMMIT_SHORT_SHA  '''
+            }
+        }
+        
+        stage('Extract Ip'){
+          steps {
+            script {
+              env.TARGET_URL=sh(
+                script:'kubectl --context segamuser-context get svc $IMAGE -n segam -o json | jq -r ".status[].ingress[0].ip"',returnStdout: true)
+            }
+          }
+        }
+/*
+        stage('Dast Zap Analaysis') {
+          parallel {
+              
+            stage('Zap Import Context'){
+              steps {
+                sh ''' zap-cli --zap-url http://192.168.42.14 --port 8080 --api-key fkeaip9dqcg9229tpm9834vsod context import "Default Context" '''
+              }
+            }
+
+            stage('Zap Open-url'){
+              steps {
+                sh ''' zap-cli --zap-url http://192.168.42.14 --port 8080 --api-key fkeaip9dqcg9229tpm9834vsod open-url http://$TARGET_URL '''
+              }
+            }
+            
+            stage('Zap Spider Scan Without Username'){
+              steps {
+                sh ''' zap-cli --zap-url http://192.168.42.14 --port 8080 --api-key fkeaip9dqcg9229tpm9834vsod spider -c "Default Context" http://$TARGET_URL '''
+              }
+            }
+
+            stage('Zap Active Scan Without Username'){
+              steps {
+                sh ''' zap-cli --zap-url http://192.168.42.14 --port 8080 --api-key fkeaip9dqcg9229tpm9834vsod active-scan --recursive -c "Default Context" http://$TARGET_URL '''
+              }
+            }
+          }
+        }
+*/
+      }
+    }
+

@@ -1,0 +1,243 @@
+### Global Configuration
+nesus_ip_address: "192.168.1.105:5000"
+GLOBAL_USERSYS: 'user'
+GLOBAL_GROUPSYS: 'user'
+GLOBAL_VOLUME_PATH: '/home/user'
+GITLAB_URL: '192.168.1.120'
+
+## Nexus Variable
+nexus_image: "sonatype/nexus3"
+nexus_tag: "latest"
+nexus_container_name: "nexus"
+nexus_port:
+  - "8081:8081"
+  - "5000:5000"
+nexus_volumes:
+  - "{{ GLOBAL_VOLUME_PATH }}/nexus-data:/nexus-data"
+
+
+## Sonarqube Variable
+sonar_image: "sonarqube"
+sonar_tag: "10.7.0-community"
+sonar_container_name: "sonarqube"
+sonar_port:
+  - "9000:9000"
+sonar_volumes:
+  - "{{ GLOBAL_VOLUME_PATH }}/sonar-data:/opt/sonarqube/data"
+  - "{{ GLOBAL_VOLUME_PATH }}/sonar-extention:/opt/sonarqube/extensions"
+
+
+## Jenkins Variable
+jenkins_image: "public.ecr.aws/bitnami/jenkins"
+jenkins_tag: "2.479.3"
+jenkins_container_name: "jenkins"
+jenkins_port:
+  - "8080:8080"
+  - "5000:5000"
+  - "8443:8443"
+jenkins_volumes:
+  - "{{ GLOBAL_VOLUME_PATH }}/jenkins_data:/bitnami/jenkins"
+  - "/var/run/docker.sock:/var/run/docker.sock"
+
+## Jenkins Agent Variable
+jenkins_agent_container_name: "agent"
+jenkins_agent_image: "jenkins/ssh-agent"
+jenkins_agent_tag: "alpine-jdk17"
+jenkins_agent_volumes:
+  - "./jenkins_agent:/home/jenkins/agent"
+  - "/var/run/docker.sock:/var/run/docker.sock"
+  - "./sshd_config:/etc/ssh/sshd_config:rw"
+jenkins_agent_environment:
+  JENKINS_AGENT_SSH_PUBKEY: <KEY>
+
+
+## Elasticseach Variable
+elastic_image: "docker.arvancloud.ir/elasticsearch"
+elastic_tag: "7.16.3"
+elastic_container_name: "elasticsearch"
+elastic_port:
+  - "9200:9200"
+  - "9300:9300"
+elastic_environment:
+  cluster.name: "elastic-local"
+  bootstrap.memory_lock: "true"
+  discovery.type: "single-node"
+  xpack.security.enabled: "true"
+  ELASTIC_PASSWORD: "asus1650"
+  ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+
+elastic_volumes: "{{ GLOBAL_VOLUME_PATH }}/elasticsearch_data"
+elastic_state: "started"
+default_cpu_limit_elastic: "2"
+default_memory_limit_elastic: "1g"
+
+## Kibana Variable
+kibana_image: "docker.arvancloud.ir/kibana"
+kibana_tag: "7.16.3"
+kibana_container_name: "kibana"
+kibana_port:
+  - "5601:5601"
+kibana_environment:
+  ELASTICSEARCH_URL: "http://192.168.1.105:9200"
+  ELASTICSEARCH_USERNAME: "elastic"
+  ELASTICSEARCH_PASSWORD: "asus1650"
+  xpack.security.user: "elastic"
+
+
+## Filebeat Config
+volume_file_path: "/opt/filebeat/filebeat.yaml"
+filebeat_config:
+  type: log
+  path: '/var/lib/docker/containers/*/*.log'
+  elastic_url: "http://192.168.1.105:9200"
+  elastic_username: "elastic"
+  elastic_password: "asus1650"
+
+
+## Filebeat Variable
+filebeat_image: "docker.arvancloud.ir/elastic/filebeat"
+filebeat_tag: "7.16.3"
+filebeat_container_name: "filebeat"
+  #filebeat_volumes:
+  #  - "/var/lib/docker/containers:/var/lib/docker/containers"
+  #  - "{{ volume_file_path }}:/usr/share/filebeat/filebeat.yml"
+  #  - "/var/run/docker.sock:/var/run/docker.sock"
+filebeat_cpu: "0.5"
+filebeat_memory: "1g"
+
+
+## Logstash Variable
+logstash_image: "docker.arvancloud.ir/elastic/logstash"
+logstash_tag: "7.16.3"
+logstash_container_name: "logstash"
+logstash_port:
+  - "5044:5044"
+  - "5045:5045/udp"
+  - "514:514/udp"
+logstash_volumes:
+  - "./pipelines.yaml:/usr/share/logstash/pipeline/logstash.conf"
+logstash_environment:
+  LS_JAVA_OPTS: "-Xmx2g -Xms2g"
+logstash_cpu: "0.5"
+logstash_memory: "1g"
+logstash_state: "started"
+logstash_server: "192.168.4.215"
+
+
+## Vault Variable
+vault_image: "hashicorp/vault"
+vault_tag: "1.18"
+vault_container_name: "vault"
+vault_port:
+  - "8200:8200"
+  - "8201:8201"
+vault_volumes:
+  - "./logs:/vault/logs/:rw"
+  - "./data:/vault/data/:rw"
+  - "./certs:/certs/:rw"
+  - "./file:/vault/file/:rw"
+  - "./config.hcl:/vault/config/config.hcl:rw"
+vault_environment:
+  VAULT_ADDR: "https://192.168.1.105:8200"
+  VAULT_API_ADDR: "https://192.168.1.105:8200"
+  VAULT_ADDRESS: "https://192.168.1.105:8200"
+
+VAULT_CLUSTER_ADDR: 192.168.1.105
+
+## Prometheus Variable
+prometheus_container_name: "prometheus"
+prometheus_image:
+prometheus_tag: ""
+prometheus_port:
+  - "9090:9090"
+prometheus_volumes:
+  - "./prometheus.yaml:/etc/prometheus/prometheus.yml"
+
+## Grafana Variable
+grafana_container_name: "grafana"
+grafana_image:
+grafana_tag: ""
+grafana_port:
+  - "3000:3000"
+
+## Node_exporter Variable
+node_exporter_container_name: "node_exporter"
+node_exporter_image:
+node_exporter_tag: ""
+node_exporter_volumes:
+  - "/:/host:ro"
+node_exporter_port:
+  - "9100:9100"
+
+## cadvisor Variable
+cadvisor_container_name: "cadvisor"
+cadvisor_image: gcr.io/cadvisor/cadvisor
+cadvisor_tag: ""
+cadvisor_volumes:
+  - "/:/rootfs:ro"
+  - "/var/run:/var/run:rw"
+  - "/sys:/sys:ro"
+  - "/var/lib/docker/:/var/lib/docker:ro"
+cadvisor_port:
+  - "8080:8080"
+
+
+## Fluent-bit Variable
+fluent_container_name: "fluentbit"
+fluent_image: fluent/fluent-bit
+fluent_tag: "latest"
+fluent_volumes:
+  - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf"
+  - "./parsers.conf:/fluent-bit/conf/parsers.conf"
+  - "/var/run/docker.sock:/var/run/docker.sock"
+fluent_port:
+  - "2020:2020"
+  - "24224:24224"
+  - "24224:24224/udp"
+
+## Fluent-bit Configuration
+fluent_config:
+  input:
+    name: "docker_events"
+    parser: "docker"
+  filter:
+    enable: False
+    name: "parser"
+    match: "*"
+    parser: "nginx"
+    reserve_data: "true"
+    key_name: "log"
+  output:
+    name: "es"
+    match: "*"
+    elastic_url: "192.168.1.112"
+    elastic_username: "elastic"
+    elastic_password: "asus1650"
+    elastic_index: "docker-events"
+
+## Falco Configuration
+FALCO_SIDEKIK_URL: "http://"
+
+## Falco Variable
+falco_container_name: "falco"
+falco_image: falcosecurity/falco
+falco_tag: "0.40.0"
+falco_volumes:
+  - "/dev:/host/dev"
+  - "/boot:/host/boot:ro"
+  - "/lib/modules:/host/lib/modules:ro"
+  - "/usr:/host/usr:ro"
+  - "/etc:/host/etc:ro"
+  - "/proc:/host/proc:ro"
+  - "/var/run/docker.sock:/var/run/docker.sock"
+  - "./falco.yaml:/etc/falco/falco.yaml"
+  - "./falco_rules.yaml:/etc/falco/falco_rules.local.yaml"
+
+## FalcoSideKik
+falcosidekik_container_name: "falcosecurity"
+falcosidekik_image: falcosecurity/falcosidekick
+falcosidekik_tag: "2.27.0"
+falcosidekik_port:
+  - "2801:2801"
+falcosidekik_environment:
+  SLACK_WEBHOOKURL: "https://hooks.slack.com/services/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"

@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: vote-to-redis
+  namespace: redis-cache
+spec:
+  podSelector:
+    matchLabels:
+      app: redis
+  policyTypes:
+  - Ingress
+
+  ingress:
+  - from:
+    - namespaceSelector:
+       matchLabels:
+        project: vote
+      podSelector:
+        matchLabels:
+          app: vote
+    ports:
+    - protocol: TCP
+      port: 6379

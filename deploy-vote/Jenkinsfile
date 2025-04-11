@@ -1,0 +1,72 @@
+pipeline {
+    agent { label 'docker' }
+
+    stages {
+        stage('Download Artifact') {
+            steps {
+                copyArtifacts filter: 'artifact', projectName: 'voting-app', selector: lastSuccessful()
+            }
+        }
+        stage('show Artifact'){
+            steps{
+                sh ''' 
+                       cat artifact
+                   '''
+            }
+        }
+        stage('Checkout'){
+            steps {
+                git branch: 'main', credentialsId: 'gitlab-project', url: 'http://192.168.1.109/root/deploy-vote.git'
+            }
+        }
+        stage('Get Project Name'){
+          steps {
+            script {
+              env.PROJECT=sh(
+                script:'cut  artifact -d ":" -f1 ',
+                returnStdout: true).trim()
+            }
+          }
+        }
+        stage('Login Register'){
+            steps{
+                sh ''' 
+                       docker login 192.168.1.105:5000 -u admin -p123
+                   '''
+            }
+        }
+        stage('Check Dockerfile'){
+            steps {
+              catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+              sh ''' docker run --rm  -v /opt/jenkins_agent/workspace/deploy-vote/$PROJECT:/repo 192.168.1.105:5000/conftest:0.0.2 test -o json --policy k8s.rego /repo/deployment.yaml '''
+              }
+            } 
+          }
+
+        stage('Delete Last Values'){
+            steps{
+                sh ''' sed -i "1,/image:/s/image:.*/image: /g" $PROJECT/deployment.yaml '''
+                sh ''' cat $PROJECT/deployment.yaml '''
+            }
+        }
+        
+
+        stage('Prepare Deployment'){
+            steps{
+                sh '''  sed -i "1,/image:/s/image:.*/image: 192.168.1.105:5000\\/$(cat artifact)/g" $PROJECT/deployment.yaml '''
+                sh '''  cat $PROJECT/deployment.yaml '''
+            }
+        }
+
+        stage('Push To Repository'){
+            steps {
+                sh ''' git config --global http.sslVerify false  '''
+                sh ''' git add . '''
+                sh ''' git config --global user.email "hasan.yosefi158@gmail.com" &&
+                       git config --global user.name "hasan" '''
+                sh ''' git commit -m "Update Manifest" ''' 
+                sh ''' git push http://root:asus1650@192.168.1.109/root/deploy-vote.git '''
+            }
+        }
+    }
+}

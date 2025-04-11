@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-python-web
+  namespace: python-web
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+    - hosts:
+      - python-web.homelab.com
+      secretName: secret-python-web
+  ingressClassName: nginx
+  rules:
+    - host: python-web.homelab.com
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: python-web-service
+              port:
+                number: 80
+

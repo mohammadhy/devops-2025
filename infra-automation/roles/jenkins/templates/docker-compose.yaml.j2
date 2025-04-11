@@ -1,0 +1,25 @@
+services:
+  {{ jenkins_container_name }}:
+    image: "{{ jenkins_image }}:{{ jenkins_tag }}"
+    container_name: "{{ jenkins_container_name }}"
+    restart: "on-failure"
+    user: root
+    privileged: true
+    ports:
+{% for port in jenkins_port %}
+    - "{{ port }}"
+{% endfor %}
+    volumes:
+{% for volume in jenkins_volumes %}
+    - {{ volume }}
+{% endfor %}
+    deploy:
+      resources:
+        limits:
+          cpus: "{{ jenkins_cpu | default(DEFAULT_CPU_LIMIT) }}"
+          memory: "{{ jenkins_memory | default(DEFAULT_MEMOEY_LIMIT) }}"
+    networks:
+      - shared_network
+networks:
+  shared_network:
+    external: true

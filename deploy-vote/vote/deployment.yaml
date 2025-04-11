@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vote-deployment
+  namespace: vote
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vote
+  template:
+    metadata:
+      labels:
+        app: vote
+    spec:
+      securityContext:
+        runAsNonRoot: True
+        runAsUser: 1000
+        runAsGroup: 2000
+      #  fsGroup: 1000
+      containers:
+        - name: vote
+          image: 192.168.1.105:5000/vote:b21896a
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: "200m"
+            requests:
+              memory: "100Mi"
+              cpu: "200m"
+          env:
+          - name: REDIS_URL
+            value: "redis.redis-cache"
+          - name: OPTION_A
+            value: "Left"
+          - name: OPTION_B
+            value: "Right"
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+          - name: project
+            mountPath: /var/log
+
+        - name: filebeat
+          image: docker.arvancloud.ir/elastic/filebeat:7.16.3
+            #restartPolicy: Always
+          volumeMounts:
+          - name: config
+            mountPath: /usr/share/filebeat/filebeat.yml
+            subPath: filebeat.yml
+
+          - name: project
+            mountPath: /var/log
+
+      volumes:
+        - name: config
+          configMap:
+            name: filebeat-config
+
+        - name: project
+          emptyDir: {}

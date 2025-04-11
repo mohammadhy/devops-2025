@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-api-deployment
+  namespace: python-api 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-api
+  template:
+    metadata:
+      labels:
+        app: python-api
+    spec:
+      containers:
+        - name: python-api
+          image: 192.168.1.105:5000/suggest-api:0.0.2
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: "200m"
+            requests:
+              memory: "50Mi"
+              cpu: "50m"
+          env:
+          - name: DATABASE_URL
+            value: "mysql+pymysql://myuser:mypassword@mysql.mysql-db:3306/mydatabase"
+          ports:
+          - name: api-port
+            containerPort: 2376
+

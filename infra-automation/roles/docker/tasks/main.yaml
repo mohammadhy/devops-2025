@@ -1,0 +1,23 @@
+---
+- name: "pull image"
+  docker_image:
+    name: "{{ docker_image }}"
+    tag: "{{ docker_tag }}"
+    source: pull
+
+- name: "Create {{ docker_container_name }} "
+  docker_container:
+    name: "{{ docker_container_name }}"
+    image: "{{ docker_image }}:{{ docker_tag }}"
+    privileged: true
+    detach: yes
+    restart_policy: "on-failure"
+    volumes: "{{ docker_volumes }}"
+    state: "{{ docker_state | default(DEFAULT_DOCKER_STATE) }}"
+    command: ["--insecure-registry", "{{ nesus_ip_address }}"]
+    cpus: "{{ docker_cpu | default(DEFAULT_CPU_LIMIT) }}"
+    memory: "{{ docker_memory | default(DEFAULT_MEMOEY_LIMIT) }}"
+
+- name: Set permissions for Docker volume
+  command: chown -R '{{ GLOBAL_USERSYS }}':'{{ GLOBAL_GROUPSYS }}' '{{ item }}'
+  loop: "{{ jenkins_volumes | map('regex_replace', '^(.*):.*$', '\\1') | list }}"

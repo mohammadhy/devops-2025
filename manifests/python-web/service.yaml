@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-web-service
+  namespace: python-web
+spec:
+  type: ClusterIP
+    #allocateLoadBalancerNodePorts: False
+  selector:
+    app: python-web
+  ports:
+  - port: 80
+    targetPort: 80
