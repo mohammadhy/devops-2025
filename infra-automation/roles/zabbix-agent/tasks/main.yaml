@@ -1,0 +1,42 @@
+---
+- name: Set OS version key
+  set_fact:
+    zabbix_os_key: "os_{{ ansible_distribution_version | regex_replace('\\.', '') }}"
+
+- name: Set Zabbix package filename
+  set_fact:
+    zabbix_pkg: "{{ lookup('vars', zabbix_os_key) }}"
+
+      #- name: Download Agent
+      #ansible.builtin.get_url:
+      #url: https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/{{ zabbix_pkg }}
+      #dest: /opt
+
+- name: Install Pkg Agent
+  ansible.builtin.apt:
+    deb: /opt/{{ zabbix_pkg }}
+
+      #- name: Update Repository
+      #ansible.builtin.apt:
+      #name: zabbix-agent2
+      #update_cache: yes
+- name: Update Zabbix agent configuration
+  block:
+    - name: Comment out existing Hostname line
+      replace:
+        path: /etc/zabbix/zabbix_agent2.conf
+        regexp: '^Hostname=Zabbix server'
+        replace: '#Hostname=Zabbix server'
+
+- name: Update Zabbix agent configuration
+  lineinfile:
+    path: /etc/zabbix/zabbix_agent2.conf
+    regexp: '^{{ item.key }}='
+    line: '{{ item.key }}={{ item.value }}'
+  loop:
+     - { key: 'Server', value: "{{ zabbix_server_ip }}" }
+     - { key: 'ServerActive', value: "{{ zabbix_server_ip }}" }
+     - { key: 'HostnameItem', value: "system.hostname" }
+     - { key: 'HostMetadataItem', value: "system.uname" }
+  notify:
+    - "Restart Agent2"
