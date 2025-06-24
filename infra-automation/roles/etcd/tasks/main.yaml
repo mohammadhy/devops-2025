@@ -1,0 +1,33 @@
+---
+- name: Install Etcd
+  apt:
+    pkg:
+      - etcd-server
+      - etcd-client
+    state: present
+    update_cache: true
+
+- name: Set fact for initial cluster
+  set_fact:
+    initial_cluster: >-
+      {% for host in groups['group1'] -%}
+          {{ hostvars[host].inventory_hostname_short }}=http://{{ hostvars[host].ansible_host }}:2380{% if not loop.last %},{% endif %}{%- endfor %}
+- name: Configure Etcd
+  template:
+    src: "etcd.j2"
+    dest: "/etc/default/etcd"
+  notify: "Stop Etcd"
+
+- name: Remove existing ETCD data directory
+  file:
+    path: /var/lib/etcd/
+    state: absent
+
+- name: Create ETCD data directory
+  file:
+    path: /var/lib/etcd/
+    state: directory
+    owner: etcd
+    group: etcd
+    mode: '0755'
+  notify: "Restart Etcd"

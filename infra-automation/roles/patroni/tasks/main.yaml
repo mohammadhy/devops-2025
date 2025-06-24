@@ -1,0 +1,43 @@
+---
+- name: Install Postgres
+  apt:
+    name: postgresql-common
+    state: present
+    update_cache: true
+
+- name: Update Repository
+  expect:
+    command: /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+    responses:
+      'Press Enter to continue': ''
+
+- name: Install Postgres
+  apt:
+    pkg:
+      - postgresql-16
+      - patroni
+  notify: Stop Postgresql
+
+- name: Mkdir Data Direcory
+  file:
+    path: '/var/lib/postgresql/data'
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: 0700
+
+- name: Set fact for initial cluster
+  set_fact:
+    etcd_cluster: >-
+      {% for host in groups['group1'] -%}
+          {{ hostvars[host].ansible_host }}:2379{% if not loop.last %},{% endif %}{%- endfor %}
+  tags:
+    - config
+
+- name: Configuration Patroni
+  template:
+    src: config.yaml.j2
+    dest: /etc/patroni/config.yml
+  tags: 
+    - config
+  notify: Restart Patroni

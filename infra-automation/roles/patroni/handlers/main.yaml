@@ -1,0 +1,11 @@
+---
+- name: Stop Postgresql
+  ansible.builtin.systemd_service:
+    name: postgresql.service
+    state: stopped
+    enabled: false
+
+- name: Restart Patroni
+  ansible.builtin.systemd_service:
+    name: patroni.service
+    state: restarted

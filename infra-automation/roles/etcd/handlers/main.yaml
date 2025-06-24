@@ -1,0 +1,9 @@
+---
+- name: Restart Etcd
+  ansible.builtin.systemd:
+    name: etcd.service
+    state: restarted
+- name: Stop Etcd
+  ansible.builtin.systemd:
+    name: etcd.service
+    state: stopped
