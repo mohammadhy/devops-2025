@@ -3,6 +3,7 @@
 
 ## Requirments:
 ```
+Need Redis Be Up & Running
 ```
 ## Usage
 ```bash
