@@ -14,6 +14,8 @@
     ```bash
     vim infra-automation/group_vars/all.yaml
     vim inventory.yaml
+    vim ansible-playbook.yaml
+    ansible-playbook -i inventory.yaml ansible-playbook -K
      ```
 ## 
 2. 
