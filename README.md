@@ -9,8 +9,10 @@
 - [Contact](#contact)
 
 ## Usage
-1. Fill Varibale & Inventory And Playbook
+1. infra-automation
     ```bash
+    cd infra-automation/
+    # Fill Value Under group_vars/all.yaml
     vim infra-automation/group_vars/all.yaml
     vim inventory.yaml
     vim ansible-playbook.yaml
