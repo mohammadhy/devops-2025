@@ -14,7 +14,9 @@
     cd infra-automation/
     # Fill Value Under group_vars/all.yaml
     vim infra-automation/group_vars/all.yaml
+    # Put Hosts
     vim inventory.yaml
+    # Select Service That You Need
     vim ansible-playbook.yaml
     ansible-playbook -i inventory.yaml ansible-playbook -K
      ```
