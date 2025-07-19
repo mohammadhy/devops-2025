@@ -4,6 +4,7 @@
 ## Requirments:
 ```
 Need Redis Be Up & Running On Port 6379
+It's Hardcoded On myproject.py 
 ```
 ## Usage
 ```bash
