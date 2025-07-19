@@ -18,6 +18,7 @@
      ```
 2. Manifests
    ```
+   kubectl apply -f <*>.yaml
    ``` 
 ## Features
 - Manifest: On Manifest Direcctory It Has All Manifest That You Need On This Project
