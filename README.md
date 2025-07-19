@@ -3,7 +3,6 @@
 
 ## Table of Contents
 - [Installation Tools](#ins_tools)
-- [Installation Tools](#usage)
 - [Features](#features)
 - [Contributing](#contributing)
 - [License](#license)
