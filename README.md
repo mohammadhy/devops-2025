@@ -19,11 +19,7 @@
     # Select Service That You Need
     vim ansible-playbook.yaml
     ansible-playbook -i inventory.yaml ansible-playbook -K
-     ```
-2. Manifests
-   ```
-   kubectl apply -f <*>.yaml
-   ``` 
+     ``` 
 ## Features
 - Manifest: On Manifest Direcctory It Has All Manifest That You Need On This Project
 - Project: Include 3 Different Project:  python-app & example-voting-app And suggestion_apiflask It Has Web Technology Database And More 
