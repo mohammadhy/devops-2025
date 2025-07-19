@@ -10,7 +10,7 @@
 - [Contact](#contact)
 
 ## inst_tools
-1. Complete All Varibale And Inventory
+1. Fill Varibale & Inventory And Playbook
     ```bash
     vim infra-automation/group_vars/all.yaml
     vim inventory.yaml
