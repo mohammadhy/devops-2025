@@ -28,8 +28,18 @@ jenkins-agent
 etcd
 patroni
 ```
-
-lvm (Detect All 80% Usage Disk And Resize It)   rsyslog zabbix-agent (Install Zabbix Agent By Service Discovery)
-            nexus (Local Registery)   sonarqube  zap
-defectdojo              requirment (Install Docker & Create Network Seprated On Docker And Put Log And Rotate On daemon.json)  vault (Config Valut) access docker  k3s_ansible (Install k3s Cluster)
+### Other Services 
+```
+lvm (Detect All 80% Usage Disk And Resize It)
+rsyslog 
+zabbix-agent (Install Zabbix Agent By Service Discovery)
+nexus (Local Registery)
+sonarqube (Check Code)
+zap (Security Scan)
+defectdojo (Centeralize Report)
+requirment (Install Docker & Create Network Seprated On Docker And Put Log And Rotate On daemon.json)
+vault (Config Valut)
+access
+docker
+k3s_ansible (Install k3s Cluster)
 ```
