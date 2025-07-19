@@ -2,13 +2,13 @@
 ### This Repository  Include Ansible Roles To Install Many Tools Like (Jenkins, Gitlab, ELK, Monitoring, Falco, ....), 3 Project Suggestion_apiflask, Python-app, Example_vote And Also Has All Manifests That Require To Deploy On K8s With Argocd.
 
 ## Table of Contents
-- [Installation Tools](#inst_tools)
+- [Installation Tools](#Usage)
 - [Features](#features)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
 
-## inst_tools
+## Usage
 1. Fill Varibale & Inventory And Playbook
     ```bash
     vim infra-automation/group_vars/all.yaml
