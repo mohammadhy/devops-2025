@@ -1,0 +1,35 @@
+---
+- name: Get filesystems with >80% usage
+  ansible.builtin.shell: |
+    df -h | awk '$5+0 > 80 && /mapper/ {print $1}'
+  register: critical_fs
+  changed_when: false
+
+- name: Extract VG and LV pairs from critical filesystems
+  ansible.builtin.set_fact:
+    vg_lv_pairs: |
+      {% set pairs = [] %}
+      {% for fs in critical_fs.stdout_lines %}
+      {%   if fs %}
+      {%     set vg = fs | regex_replace('.*mapper/(.+)-(.+)', '\\1') %}
+      {%     set lv = fs | regex_replace('.*mapper/(.+)-(.+)', '\\2') %}
+      {%     set _ = pairs.append({'vg': vg, 'lv': lv}) %}
+      {%   endif %}
+      {% endfor %}
+      {{ pairs }}
+  when: critical_fs.stdout != ""
+
+- name: Display extracted VG and LV pairs
+  ansible.builtin.debug:
+    var: vg_lv_pairs
+  when: vg_lv_pairs is defined
+
+- name: Extend Volume Groups and Logical Volumes
+  community.general.lvol:
+    vg: "{{ item.vg }}"
+    lv: "{{ item.lv }}"
+    size: +20%FREE
+    resizefs: true
+  loop: "{{ vg_lv_pairs }}"
+  when: vg_lv_pairs is defined
+

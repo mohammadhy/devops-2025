@@ -1,8 +1,12 @@
 [group1]
-s1 ansible_host=192.168.4.196 ansible_user=user
 
-[group2]
-s2 ansible_host=192.168.4.198 ansible_user=user
 
-[group3]
-s3 ansible_host=192.168.1.106 ansible_user=user
+s1 ansible_host=172.29.235.6 ansible_user=ubuntu
+#s2 ansible_host=172.29.235.119 ansible_user=ubuntu
+#s3 ansible_host=172.29.235.179 ansible_user=ubuntu
+
+#[group2]
+#s2 ansible_host=192.168.4.198 ansible_user=user
+
+#[group3]
+#s3 ansible_host=192.168.1.106 ansible_user=user

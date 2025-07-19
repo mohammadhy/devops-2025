@@ -11,6 +11,10 @@ services:
 {% for volume in nexus_volumes %}
     - {{ volume }}
 {% endfor %}
+    environment:
+{% for key, value in nexus_environment.items() %}
+     {{ key }}: "{{ value }}"
+{% endfor %}
     deploy:
       resources:
         limits:

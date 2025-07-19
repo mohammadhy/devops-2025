@@ -2,7 +2,7 @@ scope: postgresql-cluster
 namespace: /service/
 name: {{ inventory_hostname }}
 
-etcd:
+etcd3:
   hosts: {{ etcd_cluster }} 
 
 restapi:
@@ -32,7 +32,7 @@ postgresql:
   listen: 0.0.0.0:5432
   connect_address: {{ ansible_host }}:5432
   data_dir: /var/lib/postgresql/data
-  bin_dir: /usr/lib/postgresql/16/bin
+  bin_dir: /usr/lib/postgresql/17/bin
   authentication:
     superuser:
       username: postgres

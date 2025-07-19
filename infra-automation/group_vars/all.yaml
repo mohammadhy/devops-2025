@@ -1,20 +1,31 @@
 ### Global Configuration
-nesus_ip_address: "192.168.1.105:5000"
-GLOBAL_USERSYS: 'user'
-GLOBAL_GROUPSYS: 'user'
-GLOBAL_VOLUME_PATH: '/home/user'
+nesus_ip_address: "172.29.235.6:5000"
+GLOBAL_USERSYS: 'ubuntu'
+GLOBAL_GROUPSYS: 'ubuntu'
+GLOBAL_VOLUME_PATH: '/home/ubuntu'
 GITLAB_URL: '192.168.1.120'
+
+os_2404: "zabbix-release_latest_7.0+ubuntu24.04_all.deb"
+os_2204: "zabbix-release_latest_7.0+ubuntu22.04_all.deb"
+zabbix_server_ip: 172.20.26.93,172.20.26.107
 
 ## Nexus Variable
 nexus_image: "sonatype/nexus3"
-nexus_tag: "latest"
+nexus_tag: "3.82.0"
 nexus_container_name: "nexus"
+nexus_environment:
+  INSTALL4J_ADD_VM_PARAMS: "-Xms2703m -Xmx2703m -XX:MaxDirectMemorySize=2703m"
+  NEXUS_DATASTORE_NEXUS_JDBCURL: "jdbc:postgresql://172.29.235.33:5432/nexus"
+  NEXUS_DATASTORE_NEXUS_USERNAME: "nexus"
+  NEXUS_DATASTORE_NEXUS_PASSWORD: "admin123"
+
 nexus_port:
   - "8081:8081"
   - "5000:5000"
 nexus_volumes:
   - "{{ GLOBAL_VOLUME_PATH }}/nexus-data:/nexus-data"
-
+nexus_cpu: "2"
+nexus_memory: "4g"
 
 ## Sonarqube Variable
 sonar_image: "sonarqube"

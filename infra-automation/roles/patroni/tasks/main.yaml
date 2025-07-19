@@ -10,11 +10,13 @@
     command: /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
     responses:
       'Press Enter to continue': ''
+  tags:
+    - update
 
 - name: Install Postgres
   apt:
     pkg:
-      - postgresql-16
+      - postgresql-17
       - patroni
   notify: Stop Postgresql
 

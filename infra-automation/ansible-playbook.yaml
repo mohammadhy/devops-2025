@@ -1,15 +1,18 @@
-#- hosts: all
-#  name: Install Requirments All Node
-#  become: yes
-#  roles:
-    #- role: requirment
-    #  - role: filebeat
-
-- hosts: group3
-  name: Install On Group1
+- hosts: all
+  name: Install Requirments All Node
   become: yes
-  roles: 
-  - role: fluent-bit
+  roles:
+    #- role: requirment
+    #- role: etcd
+    #- role: patroni
+    - role: nexus
+
+    #- hosts: group1
+    # name: Install On Group1
+    #become: yes
+    #roles: 
+    #- role: zabbix-agent 
+    #- role: requirment
     #- role: elastic
     # - role: kibana
     #- role: elastic
