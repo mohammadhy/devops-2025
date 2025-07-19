@@ -3,7 +3,7 @@
 
 ## Requirments:
 ```
-Need Redis Be Up & Running
+Need Redis Be Up & Running On Port 6379
 ```
 ## Usage
 ```bash
