@@ -1,7 +1,5 @@
 [group1]
-
-
-s1 ansible_host=172.29.235.6 ansible_user=ubuntu
+s1 ansible_host=172.29.235.27 ansible_user=ubuntu
 #s2 ansible_host=172.29.235.119 ansible_user=ubuntu
 #s3 ansible_host=172.29.235.179 ansible_user=ubuntu
 
@@ -10,3 +8,19 @@ s1 ansible_host=172.29.235.6 ansible_user=ubuntu
 
 #[group3]
 #s3 ansible_host=192.168.1.106 ansible_user=user
+
+
+
+
+
+## If You Need To Run K3s Use These 
+
+#[all]
+#192.168.1.141
+#192.168.1.142
+
+#[master]
+#192.168.1.141 ansible_ssh_pass=123 ansible_ssh_user=user ansible_become_pass=123
+
+#[slave]
+#192.168.1.142 ansible_ssh_pass=123 ansible_ssh_user=user ansible_become_pass=123

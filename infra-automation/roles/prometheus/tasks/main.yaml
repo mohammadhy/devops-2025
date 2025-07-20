@@ -7,7 +7,13 @@
 - name: Render configuration file from template
   template:
     src: "prometheus.yaml.j2"
-    dest: "/opt/{{ prometheus_container_name }}/{{ prometheus_container_name }}"
+    dest: "/opt/{{ prometheus_container_name }}/{{ prometheus_container_name }}.yaml"
+    mode: "0644"
+
+- name: Copy Alerts Configuration File
+  copy:
+    src: "alerts.yaml"
+    dest: "/opt/{{ prometheus_container_name }}"
     mode: "0644"
 
 - name: Generate docker-compose.yaml from template

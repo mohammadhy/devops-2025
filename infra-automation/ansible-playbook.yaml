@@ -3,9 +3,8 @@
   become: yes
   roles:
     #- role: requirment
-    #- role: etcd
-    #- role: patroni
-    - role: nexus
+  - role: node_exporter
+    #- role: nexus
 
     #- hosts: group1
     # name: Install On Group1

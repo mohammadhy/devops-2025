@@ -1,0 +1,27 @@
+{{ define "slack.default.text" }}
+{{- if eq .Status "resolved" }}
+✅ RESOLVED   🎉 Issue has been resolved.
+{{- else }}
+🔥 {{ .Status | toUpper }}   Action Required!
+{{- end }}
+{{ if eq .CommonLabels.severity "critical" }}🚨 CRITICAL
+{{ else if eq .CommonLabels.severity "warning" }}⚠️ WARNING
+{{ else if eq .CommonLabels.severity "info" }}ℹ️ INFO
+{{ else }}❓ UNKNOWN
+{{ end }}📛 {{ .CommonLabels.alertname }}
+🌍Environment: {{- if (.CommonLabels.environment | match `^prod.*|prd.*`) }}🚀
+{{- else if (.CommonLabels.environment | match `^stage.*|^stg.*`) }}🎮
+{{- else if (.CommonLabels.environment | match `^test.*|^tst.*`) }}🧪
+{{- end }} {{ .CommonLabels.environment }}
+
+🏢 {{ .CommonLabels.instance }}
+{{ range .Alerts }}
+{{ if .Labels.alertobject }}
+- {{ .Labels.alertobject }}: {{ index .Labels .Labels.alertobject }}
+{{ end }}
+{{ end }}
+
+🗞️ _{{ .CommonAnnotations.summary }}_
+--------
+{{ range $key, $value := .CommonLabels }}🏷️ {{ $key }}: `{{ $value }}`   {{ end }}
+{{ end }}

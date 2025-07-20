@@ -1,0 +1,64 @@
+---
+- hosts: all
+  become: true
+  tasks:
+  - name: Check Installation Docker
+    shell: which docker
+    register: check_install
+    ignore_errors: yes
+
+  - name: Install Docker On All Server
+    apt:
+      name: docker.io
+      state: present
+    when: check_install.stdout == ""
+
+- hosts: master
+  become: true
+  tasks:
+  - name: Check Installation K3s
+    shell: which k3s
+    register: check_install_k3s
+    ignore_errors: yes
+
+  - name: Install k3s
+    shell: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --disable=servicelb --disable=traefik --docker --bind-address=$(hostname -I | awk '{print $1}')" sh -s -
+    when: check_install_k3s.stdout == ""
+
+  - name: Copy Token
+    shell: scp /var/lib/rancher/k3s/server/agent-token user@{{ worker }}:/tmp/k3s_token.txt
+
+  - name: Copy Ip
+    shell: |
+      echo $(hostname -I | awk '{print $1}') > /tmp/k3s_ip.txt
+
+  - name: Copy Token
+    shell: scp /tmp/k3s_ip.txt user@{{ worker }}:/tmp/k3s_ip.txt
+
+- hosts: slave
+  become: true
+  tasks:
+  - name: Check Installation Docker
+    shell: kubectl
+    register: check_install_k3s_agent
+    ignore_errors: yes
+
+  - name: Join To Cluster
+    shell: curl -sfL https://get.k3s.io |INSTALL_K3S_EXEC="agent --docker" K3S_URL=https://$(echo $(cat /tmp/k3s_ip.txt)):6443 K3S_TOKEN=$(echo $(cat /tmp/k3s_token.txt)) sh -s - 
+    when: check_install_k3s_agent.stdout == ""
+
+- hosts: master
+  become: true
+  tasks:
+  - name: Clone All manifest To
+    git:
+      repo: https://github.com/mohammadhy/devops-tools.git
+      dest: /tmp/manifest
+
+  - name: Running manifests
+    shell: /tmp/manifest/install.sh
+    register: result
+
+  - name: Check Result
+    debug:
+      msg: "{{ result.stdout }}"

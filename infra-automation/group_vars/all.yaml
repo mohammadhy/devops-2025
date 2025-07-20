@@ -157,12 +157,24 @@ VAULT_CLUSTER_ADDR: 192.168.1.105
 
 ## Prometheus Variable
 prometheus_container_name: "prometheus"
-prometheus_image:
-prometheus_tag: ""
+prometheus_image: "prom/prometheus"
+prometheus_tag: "v3.5.0"
 prometheus_port:
   - "9090:9090"
 prometheus_volumes:
   - "./prometheus.yaml:/etc/prometheus/prometheus.yml"
+  - "./alerts.yaml:/etc/prometheus/alerts.yaml"
+
+
+## Alertmanager Variable
+alertmanager_container_name: "alertmanager"
+alertmanager_image: "prom/alertmanager"
+alertmanager_tag: "v0.28.1"
+alertmanager_port:
+  - "9093:9093"
+alertmanager_volumes:
+  - "./alertmanager.yaml:/etc/alertmanager/alertmanager.yml" 
+  - "./slack.tmpl:/etc/alertmanager/templates/slack.tmpl"
 
 ## Grafana Variable
 grafana_container_name: "grafana"
@@ -173,8 +185,8 @@ grafana_port:
 
 ## Node_exporter Variable
 node_exporter_container_name: "node_exporter"
-node_exporter_image:
-node_exporter_tag: ""
+node_exporter_image: "prom/node-exporter"
+node_exporter_tag: "v1.9.1"
 node_exporter_volumes:
   - "/:/host:ro"
 node_exporter_port:
@@ -251,4 +263,4 @@ falcosidekik_tag: "2.27.0"
 falcosidekik_port:
   - "2801:2801"
 falcosidekik_environment:
-  SLACK_WEBHOOKURL: "https://hooks.slack.com/services/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"
+  SLACK_WEBHOOKURL: "https://hooks.slack.com/services/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"
