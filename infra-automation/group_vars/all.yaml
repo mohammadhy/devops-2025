@@ -194,8 +194,8 @@ node_exporter_port:
 
 ## cadvisor Variable
 cadvisor_container_name: "cadvisor"
-cadvisor_image: gcr.io/cadvisor/cadvisor
-cadvisor_tag: ""
+cadvisor_image: "gcr.io/cadvisor/cadvisor"
+cadvisor_tag: "v0.39.3"
 cadvisor_volumes:
   - "/:/rootfs:ro"
   - "/var/run:/var/run:rw"

@@ -1,6 +1,17 @@
 groups:
   - name: MemoryThreshold
     rules:
+      - alert: ContainerKilled
+        expr: time() - container_last_seen > 10
+        for: 0m
+        labels:
+          severity: warning
+          environment: prod
+          team: office
+        annotations:
+          summary: Container killed (instance {{ $labels.instance }})
+          description: "A container has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
       - alert: HighRAMUsage
         expr: 100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 10
         for: 1m
