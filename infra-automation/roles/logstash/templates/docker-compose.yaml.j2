@@ -5,18 +5,22 @@ services:
     image: "{{ logstash_image }}:{{ logstash_tag }}"
     container_name: "{{ logstash_container_name }}"
     restart: "on-failure"
+{% if logstash_environment | default({}) %}
     environment:
 {% for key, value in logstash_environment.items() %}
       {{ key }}: "{{ value }}"
 {% endfor %}
+{% endif %}
     ports:
 {% for port in logstash_port %}
     - "{{ port }}"
 {% endfor %}
+{% if logstash_volumes | default({}) %}
     volumes:
 {% for volume in logstash_volumes %}
     - {{ volume }}
 {% endfor %}
+{% endif %}
     deploy:
       resources:
         limits:

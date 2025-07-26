@@ -5,10 +5,12 @@ services:
 {% for port in sonar_port %}
     - {{ port }}
 {% endfor %}
+{% if sonar_volumes | default({}) %}
     volumes:
 {% for volume in sonar_volumes %}
     - {{ volume }}
 {% endfor %}
+{% endif %}
     deploy:
       restart_policy:
         condition: on-failure

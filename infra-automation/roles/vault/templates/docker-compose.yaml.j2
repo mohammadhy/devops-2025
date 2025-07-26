@@ -8,14 +8,18 @@ services:
 {% for port in vault_port %}
       - "{{ port }}"
 {% endfor %}
+{% if vault_environment | default({}) %}
     environment:
 {% for key, value in vault_environment.items() %}
      {{ key }}: "{{ value }}"
 {% endfor %}
+{% endif %}
+{% if vault_volumes | default({}) %}
     volumes:
 {% for volume in vault_volumes %}
     - {{ volume }}
 {% endfor %}
+{% endif %}
     deploy:
       resources:
         limits:

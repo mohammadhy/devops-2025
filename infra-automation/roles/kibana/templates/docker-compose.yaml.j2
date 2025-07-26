@@ -7,10 +7,12 @@ services:
 {% for port in kibana_port %}
     - {{ port }}
 {% endfor %}
+{% if kibana_environment | default({}) %}
     environment:
 {% for key, value in kibana_environment.items() %}
      {{ key }}: {{ value }}
 {% endfor %}
+{% endif %}
     deploy:
       restart_policy:
         condition: on-failure

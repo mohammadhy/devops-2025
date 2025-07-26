@@ -9,10 +9,12 @@ services:
 {% for port in jenkins_port %}
     - "{{ port }}"
 {% endfor %}
+{% if jenkins_volumes | default({}) %}
     volumes:
 {% for volume in jenkins_volumes %}
     - {{ volume }}
 {% endfor %}
+{% endif %}
     deploy:
       resources:
         limits:

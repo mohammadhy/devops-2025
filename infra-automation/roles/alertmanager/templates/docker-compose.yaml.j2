@@ -7,10 +7,12 @@ services:
 {% for port in alertmanager_port %}
     - "{{ port }}"
 {% endfor %}
+{% if alertmanager_volumes | default({}) %}
     volumes:
 {% for volume in alertmanager_volumes %}
     - {{ volume }}
 {% endfor %}
+{% endif %}
     deploy:
       resources:
         limits:

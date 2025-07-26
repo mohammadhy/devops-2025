@@ -7,10 +7,12 @@ services:
 {% for port in prometheus_port %}
     - "{{ port }}"
 {% endfor %}
+{% if prometheus_volumes | default({}) %}
     volumes:
 {% for volume in prometheus_volumes %}
     - {{ volume }}
 {% endfor %}
+{% endif %}
     deploy:
       resources:
         limits:

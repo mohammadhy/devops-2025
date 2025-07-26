@@ -7,10 +7,12 @@ services:
 {% for port in cadvisor_port %}
     - "{{ port }}"
 {% endfor %}
+{% if cadvisor_volumes | default({}) %}
     volumes:
 {% for volume in cadvisor_volumes %}
     - {{ volume }}
 {% endfor %}
+{% endif %}
     deploy:
       resources:
         limits:
