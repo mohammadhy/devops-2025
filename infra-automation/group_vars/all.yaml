@@ -14,7 +14,7 @@ nexus_image: "sonatype/nexus3"
 nexus_tag: "3.82.0"
 nexus_container_name: "nexus"
 nexus_environment: 
-  INSTALL4J_ADD_VM_PARAMS: "-Xms2703m -Xmx2703m -XX:MaxDirectMemorySize=2703m"
+  INSTALL4J_ADD_VM_PARAMS: "-Xms2703m -Xmx2703m -XX:MaxDirectMemorySize=2703m -Djava.util.prefs.userRoot=/opt/sonatype/sonatype-work/nexus3/"
   #NEXUS_DATASTORE_NEXUS_JDBCURL: "jdbc:postgresql://172.29.235.33:5432/nexus"
   #NEXUS_DATASTORE_NEXUS_USERNAME: "nexus"
   #NEXUS_DATASTORE_NEXUS_PASSWORD: "admin123"
