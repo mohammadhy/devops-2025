@@ -55,20 +55,26 @@
         - stage
 
 ## To Enable Metallb And Ingress We Need To install:
+    ```
     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.7/config/manifests/metallb-native.yaml
     kubectl apply -f metallb-ip-pool.yaml
-    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
-    
+    ```
+## To Install Nginx-Ingress
+    ```
+       kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+    ```
 ## To Install Argocd And Argocd Rollout:
-    kubectl create namespace argocd
-    kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+    ```
+    helm upgrade --install argocd argo/argo-cd --namespace argocd -f argocd-values.yaml --create-namespace
     kubectl create namespace argo-rollouts
     kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+    
 
     curl -LO https://github.com/argoproj/argo-rollouts/releases/latest/download/kubectl-argo-rollouts-amd64
     chmod +x ./kubectl-argo-rollouts-darwin-amd64
     sudo mv ./kubectl-argo-rollouts-darwin-amd64 /usr/local/bin/kubectl-argo 
     kubectl-argo rollouts version --kubeconfig 
+    ```
 ## Find PID And DockerID
     with top and htop we can find most pid use more cpu then on path /proc/<pid>/cpuset find containerID then on path /sys/fs/cgroup/system.slice/<containerID>
 ## SonarQube
