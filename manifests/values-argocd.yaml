@@ -1,0 +1,44 @@
+nameOverride: argocd
+namespaceOverride: "argocd"
+
+crds:
+  install: true
+  keep: true
+
+global:
+  domain: hy-argocd.com
+  image:
+    repository: quay.io/argoproj/argocd
+    tag: ""
+    imagePullPolicy: IfNotPresent
+
+configs:
+  secret:
+    argocdServerAdminPassword: "$2y$10$hkpxdckQLjhBAfFJ1elZAureCn.THV.DY6tL7uz00zlT9nuxuIoiy"
+  params:
+    server.insecure: true
+
+controller:
+  name: application-controller
+  replicas: 1
+  resources:
+    limits:
+      cpu: 1500m
+      memory: 2048Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  metrics:
+    enabled: true
+    service:
+      type: ClusterIP
+      servicePort: 8082
+      portName: http-metrics
+    serviceMonitor:
+      enabled: true
+      interval: 30s
+      namespace: monitoring
+
+server:
+  name: server
+  replicas: 1
