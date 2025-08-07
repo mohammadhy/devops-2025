@@ -55,16 +55,11 @@
         - stage
 
 ## To Enable Metallb And Ingress We Need To install:
-    ```
     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.7/config/manifests/metallb-native.yaml
     kubectl apply -f metallb-ip-pool.yaml
-    ```
 ## To Install Nginx-Ingress
-    ```
        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
-    ```
 ## To Install Argocd And Argocd Rollout:
-    ```
     helm upgrade --install argocd argo/argo-cd --namespace argocd -f argocd-values.yaml --create-namespace
     kubectl create namespace argo-rollouts
     kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
@@ -74,7 +69,6 @@
     chmod +x ./kubectl-argo-rollouts-darwin-amd64
     sudo mv ./kubectl-argo-rollouts-darwin-amd64 /usr/local/bin/kubectl-argo 
     kubectl-argo rollouts version --kubeconfig 
-    ```
 ## Find PID And DockerID
     with top and htop we can find most pid use more cpu then on path /proc/<pid>/cpuset find containerID then on path /sys/fs/cgroup/system.slice/<containerID>
 ## SonarQube
@@ -123,3 +117,6 @@
           runtime_type = "io.containerd.runsc.v1"
           [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runsc.options]
             binaryName = "/usr/local/bin/runsc"
+## To Have App In App Argocd 
+   
+   argocd app create app-of-app-voting --dest-namespace argocd --dest-server https://kubernetes.default.svc --repo http://192.168.1.109/root/voting-app-requirment.git --path ./argo_app_in_app/ --sync-policy auto
