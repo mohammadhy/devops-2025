@@ -2,5 +2,6 @@ openssl req -x509 -new -nodes -newkey rsa:2048 -keyout rootCA.key -out rootCA.pe
 openssl req -new -nodes -newkey rsa:2048 -keyout server.key -out server.csr -config csr.conf
 openssl x509 -req -in server.csr -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -out server.crt -extfile csr.conf -extensions v3_req
 
+openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout tls.key -out tls.crt -config csr.conf -extensions 'v3_req'
 kubectl create secret tls secret-python-web --key server.key --cert server.crt
 
