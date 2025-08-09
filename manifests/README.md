@@ -17,44 +17,25 @@
       override_path = false
       username = "admin"
       password = "123"
-## Setup Nfs Server By Following Command:
+## To Install Ceph As StorageClass:
+    kubectl apply -f manifest/ceph
+    kubectl apply -f https://raw.githubusercontent.com/ceph/ceph-csi/master/deploy/rbd/kubernetes/csi-provisioner-rbac.yaml
+    kubectl apply -f https://raw.githubusercontent.com/ceph/ceph-csi/master/deploy/rbd/kubernetes/csi-nodeplugin-rbac.yaml
+    wget https://raw.githubusercontent.com/ceph/ceph-csi/master/deploy/rbd/kubernetes/csi-rbdplugin-provisioner.yaml
+    kubectl apply -f csi-rbdplugin-provisioner.yaml
+## To Install Nfs Server:
     apt install nfs-server
     vi /etc/export
     <Path> <CLIENT-IP>(rw, sync, no_root_squash)
-## Use As StorageClass 
+## Create StorageClass Nfs
     helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner
     helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --create-namespace --namespace nfs-provisioner --set nfs.server=<ip> --set nfs.path=/data
-## To Have prometheus Operator Follow Step Below:
+## To Install prometheus Operator:
     helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
     helm repo update
-    helm install prometheus prometheus-community/kube-prometheus-stack
-    Check Selector By following command kubectl get prometheus.monitoring.coreos.com -o yaml 
-    helm show values prometheus-community/kube-prometheus-stack > values.yaml
-        alertmanagerConfigSelector:
-       matchLabels:
-         release: prometheus-stack
-    helm upgrade prometheus-stack prometheus-community/kube-prometheus-stack -f values.yaml
-    This is Simple ServiceMonitor:
-    ------------------------------------
-    apiVersion: monitoring.coreos.com/v1
-    kind: ServiceMonitor
-    metadata:
-    labels:
-      release: prometheus-stack
-    name: servicemonitor-python-web-app
-    namespace: stage
-    spec:
-      endpoints:
-      - interval: 30s
-        port: web
-      selector:
-        matchLabels:
-         app: python-log
-      namespaceSelector:
-        matchNames:
-        - stage
-
-## To Enable Metallb And Ingress We Need To install:
+    kubectl apply -f manifest/prometheus/rbac
+    helm install prometheus prometheus-community/kube-prometheus-stack -f values.yaml --create-namespace --namespace monitoring
+## To Install Metallb:
     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.7/config/manifests/metallb-native.yaml
     kubectl apply -f metallb-ip-pool.yaml
 ## To Install Nginx-Ingress
@@ -63,8 +44,6 @@
     helm upgrade --install argocd argo/argo-cd --namespace argocd -f argocd-values.yaml --create-namespace
     kubectl create namespace argo-rollouts
     kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
-    
-
     curl -LO https://github.com/argoproj/argo-rollouts/releases/latest/download/kubectl-argo-rollouts-amd64
     chmod +x ./kubectl-argo-rollouts-darwin-amd64
     sudo mv ./kubectl-argo-rollouts-darwin-amd64 /usr/local/bin/kubectl-argo 
@@ -79,20 +58,6 @@
    3) Put Ip Address Sonar
    4) Put Key On Credentials
    5) EX For Python : /var/lib/jenkins/sonar-cli/bin/sonar-scanner -Dsonar.projectKey=<Project-Name> -Dsonar.sources=.  -Dsonar.exclusions=<file/folder not scan>
-## Mysql-Operator
-    kubectl apply -f https://raw.githubusercontent.com/mysql/mysql-operator/trunk/deploy/deploy-crds.yaml
-    kubectl apply -f https://raw.githubusercontent.com/mysql/mysql-operator/trunk/deploy/deploy-operator.yaml
-    Change storageclass to default
-## Affinity 
-    if you have 3 nodes and 3 replicas of pod and need to each pod assigns to differnet node add command below
-        spec:
-      topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: DoNotSchedule
-        labelSelector:
-          matchLabels:
-            app: my-service
 ## Move Image Docker To Containerd:
     docker save -o image.tar <image-name>
     sudo scp IP:<PATH> image.tar
@@ -101,11 +66,6 @@
     snap install oras --classic
     oras cp ghcr.io/aquasecurity/trivy-db:2 --to-plain-http 192.168.1.104:5000/trivy/trivy-db:2
     TRIVY_USERNAME=YOUR_USERNAME TRIVY_PASSWORD=YOUR_PASSWORD trivy image --db-repository 192.168.1.104:5000/trivy/trivy-db:2 -f json -o trivy.json 192.168.1.104:5000/python-web-app:v1 
-## Use Loki & Grafana To Logging 
-    helm repo add grafana https://grafana.github.iohelm-chart
-    helm show values  grafana/loki-stack  > values.yaml Set Grafana: True
-    helm install --values values.yaml loki grafana/loki-stack
-    kubectl get secrets loki-grafana -o json {.data.admin-password} | base64 -d
     
 ## Use Metrics-server 
     kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/high-availability-1.21+.yaml

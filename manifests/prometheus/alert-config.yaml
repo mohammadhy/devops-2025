@@ -1,0 +1,80 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: alertmanager-main
+  namespace: monitoring
+type: Opaque
+stringData:
+  alertmanager.yaml: |-
+    global:
+      resolve_timeout: 5m
+      http_config:
+        tls_config:
+          insecure_skip_verify: true
+    templates:
+      - '/etc/alertmanager/config/slack.tmpl'
+    route:
+      group_by:
+        - alertname
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      receiver: webhook
+      routes:
+      - receiver: slack-notifications
+        match:
+          severity: critical
+      - receiver: mattermost
+        match: 
+          severity: warning
+      - receiver: webhook
+        match:
+          severity: warning
+    receivers:
+    - name: webhook
+      webhook_configs:
+      - url: "http://192.168.1.170:5000/webhook"
+        send_resolved: true
+    - name: mattermost
+      slack_configs:
+      - send_resolved: true
+        api_url: "https://192.168.1.103:444/hooks/forbxq3octy9mbp5hcxk9nfbje"
+        title: '{{ template "slack.default.title" . }}'
+        color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+        pretext: '{{ .CommonAnnotations.summary }}'
+    - name: slack-notifications
+      slack_configs:
+      - channel: "#stage-locl"
+        send_resolved: true
+        api_url: "https://hooks.slack.com/services/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"
+          #text: "{{ range .Alerts }}<!channel> {{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}"
+        title: '{{ template "slack.default.title" . }}'
+        color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+        pretext: '{{ .CommonAnnotations.summary }}'
+  slack.tmpl: |-
+     {{ define "slack.default.text" }}
+     {{- if eq .Status "resolved" }}
+     ✅ RESOLVED   🎉 Issue has been resolved.
+     {{- else }}
+     🔥 {{ .Status | toUpper }}   Action Required!
+     {{- end }}
+     {{ if eq .CommonLabels.severity "critical" }}🚨 CRITICAL
+     {{ else if eq .CommonLabels.severity "warning" }}⚠️ WARNING
+     {{ else if eq .CommonLabels.severity "info" }}ℹ️ INFO
+     {{ else }}❓ UNKNOWN
+     {{ end }}📛 {{ .CommonLabels.alertname }}
+     🌍Environment: {{- if (.CommonLabels.environment | match `^prod.*|prd.*`) }}🚀
+     {{- else if (.CommonLabels.environment | match `^stage.*|^stg.*`) }}🎮
+     {{- else if (.CommonLabels.environment | match `^test.*|^tst.*`) }}🧪
+     {{- end }} {{ .CommonLabels.environment }}
+
+     🏢 {{ .CommonLabels.instance }}
+     {{ range .Alerts }}
+     {{ if .Labels.alertobject }}
+      - {{ .Labels.alertobject }}: {{ index .Labels .Labels.alertobject }}
+     {{ end }}
+     {{ end }}
+     🗞️ _{{ .CommonAnnotations.summary }}_
+     {{ range $key, $value := .CommonLabels }}🏷️ {{ $key }}: `{{ $value }}`   {{ end }}
+     {{ end }}
