@@ -18,12 +18,59 @@ filter {
       }
       remove_field => ["message"]
     }
-  } else if [type] == "syslog" {
+if [kubernetes][node][uid] {
+      mutate {
+        replace => { "[kubernetes][node][uid]" => "********" }
+      }
+    }
+    mutate {
+     remove_field => [
+       "[kubernetes][node][hostname]",
+       "[host][os][version]",
+       "[host][os][platform]",
+       "[host][os][name]",
+       "[host][ip]",
+       "[host][mac]",
+       "[host][os][codename]",
+       "[host][os][family]",
+       "[host][os][kernel]",
+       "[host][os][platform]",
+       "[host][os][type]",
+       "[host][os][version]",
+       "[host][architecture]",
+       "[container][id]",
+       "[agent][version]",
+       "[agent][id]",
+       "[agent][hostname]",
+       "[agent][ephemeral_id]",
+       "[agent][type]",
+       "[agent][name]",
+       "[kubernetes][labels][pod-template-generation]",
+       "[kubernetes][namespace_uid]",
+       "[kubernetes][pod][uid]",
+       "[log][file][path]",
+       "[log][offset]",
+       "[kubernetes][node][labels][kubernetes_io/os]",
+       "[kubernetes][node][labels][kubernetes_io/hostname]",
+       "[kubernetes][node][labels][kubernetes_io/arch]",
+       "[kubernetes][node][labels][beta_kubernetes_io/os]",
+       "[kubernetes][node][labels][beta_kubernetes_io/arch]",
+       "[kubernetes][labels][controller-revision-hash]",
+       "[host][hostname]"
+     ]
+    }
+  }
+  else if [type] == "syslog" {
     grok {
       match => {
-        "message" => '%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_host} %{DATA:program}(\[%{POSINT:pid}\])?: %{GREEDYDATA:syslog_message}''
+        "message" => '%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_host} %{DATA:program}(\[%{POSINT:pid}\])?: %{GREEDYDATA:syslog_message}'
       }
       remove_field => ["message"]
+    }
+
+    # Add host-based index prefix for syslog
+    mutate {
+      add_field => { "[@metadata][index_prefix]" => "syslog-%{[host]}" }
     }
   }
 }
@@ -43,7 +90,7 @@ output {
       ssl_certificate_verification => false
       user => "elastic"
       password => "asus1650"
-      index => "syslog-%{+YYYY.MM.dd}"
+      index => "%{[@metadata][index_prefix]}-%{+YYYY.MM.dd}"
     }
   }
 }
