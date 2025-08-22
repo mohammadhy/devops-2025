@@ -10,6 +10,12 @@ services:
       - "filebeat"
       - "-e"
       - "--path.data=/home/data"
+{% if filebeat_environment | default({}) %}
+    environment:
+{% for key, value in filebeat_environment.items() %}
+      {{ key }}: "{{ value }}"
+{% endfor %}
+{% endif %}
     volumes:
      - /var/lib/docker/containers:/var/lib/docker/containers
      - /var/run/docker.sock:/var/run/docker.sock
@@ -19,9 +25,3 @@ services:
         limits:
           cpus: "{{ filebeat_cpu | default(DEFAULT_CPU_LIMIT) }}"
           memory: "{{ filebeat_memory | default(DEFAULT_MEMORY_LIMIT) }}"
-    networks:
-      - shared_network
-
-networks:
-  shared_network:
-    external: true

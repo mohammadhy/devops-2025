@@ -2,8 +2,8 @@
   name: Install Requirments All Node
   become: yes
   roles:
-  - role: requirment
-  - role: nexus
+  - role: filebeat
+    #- role: nexus
     #- role: nexus
 
     #- hosts: group1

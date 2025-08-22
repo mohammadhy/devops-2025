@@ -115,6 +115,8 @@ filebeat_container_name: "filebeat"
   #  - "/var/run/docker.sock:/var/run/docker.sock"
 filebeat_cpu: "0.5"
 filebeat_memory: "1g"
+filebeat_environment:
+  HOST_IP: {{ hostvars[host].ansible_host }}
 
 
 ## Logstash Variable

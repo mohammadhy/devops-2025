@@ -13,4 +13,9 @@ output.logstash:
 processors:
   - add_docker_metadata:
       host: "unix:///var/run/docker.sock"
-  - add_host_metadata: ~
+  - add_host_metadata:
+    netinfo.enabled: true
+  - add_fields:
+      target: '@metadata'
+      fields:
+        ip: "${HOST_IP}"
