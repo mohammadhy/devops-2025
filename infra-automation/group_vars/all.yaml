@@ -109,14 +109,8 @@ filebeat_config:
 filebeat_image: "docker.arvancloud.ir/elastic/filebeat"
 filebeat_tag: "7.16.3"
 filebeat_container_name: "filebeat"
-  #filebeat_volumes:
-  #  - "/var/lib/docker/containers:/var/lib/docker/containers"
-  #  - "{{ volume_file_path }}:/usr/share/filebeat/filebeat.yml"
-  #  - "/var/run/docker.sock:/var/run/docker.sock"
 filebeat_cpu: "0.5"
 filebeat_memory: "1g"
-filebeat_environment:
-  HOST_IP: {{ hostvars[host].ansible_host }}
 
 
 ## Logstash Variable
@@ -134,7 +128,7 @@ logstash_environment:
 logstash_cpu: "0.5"
 logstash_memory: "1g"
 logstash_state: "started"
-logstash_server: "192.168.4.215"
+logstash_server: "192.168.1.113"
 
 
 ## Vault Variable

@@ -9,12 +9,12 @@ filebeat.inputs:
 #  password: {{ filebeat_config.elastic_password }}
 
 output.logstash:
-  hosts: ["{{ logstash_server }}:5044"]
+  hosts: ["{{ logstash_server }}:5046"]
 processors:
   - add_docker_metadata:
       host: "unix:///var/run/docker.sock"
   - add_host_metadata:
-    netinfo.enabled: true
+      netinfo.enabled: true
   - add_fields:
       target: '@metadata'
       fields:

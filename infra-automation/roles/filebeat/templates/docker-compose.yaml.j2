@@ -10,12 +10,8 @@ services:
       - "filebeat"
       - "-e"
       - "--path.data=/home/data"
-{% if filebeat_environment | default({}) %}
     environment:
-{% for key, value in filebeat_environment.items() %}
-      {{ key }}: "{{ value }}"
-{% endfor %}
-{% endif %}
+      HOST_IP: "{{ ansible_host }}"
     volumes:
      - /var/lib/docker/containers:/var/lib/docker/containers
      - /var/run/docker.sock:/var/run/docker.sock

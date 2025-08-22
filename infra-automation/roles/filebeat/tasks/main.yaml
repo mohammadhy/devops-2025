@@ -5,7 +5,7 @@
     state: directory
     mode: '0755'
 
-- name: "Render configuration file from template"
+- name: Render Configuration File From Template
   template:
     src: "filebeat.yaml.j2"
     dest: "/opt/filebeat/{{ filebeat_container_name }}.yaml"
