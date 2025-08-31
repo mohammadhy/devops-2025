@@ -1,6 +1,6 @@
 # 🚀 Getting Started
 
-Prerequisites
+## Prerequisites
 To use the resources in this repository, you need the following tools installed on your local machine or CI/CD system:
 
 kubectl: The Kubernetes command-line tool. Installation Guide
