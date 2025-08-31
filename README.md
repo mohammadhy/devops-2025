@@ -22,7 +22,7 @@ ansible: The Ansible automation tool. Installation Guide
    ```
 2. Example Vote
    ```
-   This Is A MonoRepo App You Can Find It Here [Example Vote](https://github.com/dockersamples/example-voting-app?tab=readme-ov-file/)
+   This Is A MonoRepo App You Can Find It Here [Example Vote](https://github.com/dockersamples/example-voting-app.git)
    ```
 3. Siggestion Api
    ```
