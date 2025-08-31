@@ -16,6 +16,18 @@ ansible: The Ansible automation tool. Installation Guide
 - [License](#license)
 - [Contact](#Contact)
 ## Projects
+1. Python Web Application
+   ```
+   This Is A Simple Application That Need Redis.
+   ```
+2. Example Vote
+   ```
+   This Is A MonoRepo App That Has 3 Microservices.
+   ```
+3. Siggestion Api
+   ```
+   This Is A Api Application.
+   ```
 ## UsageAnsible
 1. ansible
     ```bash
