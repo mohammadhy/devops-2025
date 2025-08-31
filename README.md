@@ -1,5 +1,13 @@
 # Devsecops
-### This Repository  Include Ansible Roles To Install Many Tools Like (Jenkins, Gitlab, ELK, Monitoring, Falco, ....), 3 Project Suggestion_apiflask, Python-app, Example_vote And Also Has All Manifests That Require To Deploy On K8s With Argocd.
+🚀 Getting Started
+Prerequisites
+To use the resources in this repository, you need the following tools installed on your local machine or CI/CD system:
+
+kubectl: The Kubernetes command-line tool. Installation Guide
+
+A Kubernetes Cluster: You can use Minikube, Kind for local development, or a cloud provider (EKS, GKE, AKS).
+
+ansible: The Ansible automation tool. Installation Guide
 
 ## Table of Contents
 - [Installation Tools](#Usage)
