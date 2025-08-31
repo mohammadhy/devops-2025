@@ -31,7 +31,7 @@ patroni
 ```
 ### Other Services 
 ```
-lvm (Detect All 80% Usage Disk And Resize It)
+lvm (Detect All 80% Usage Disk And Resize It Only Works When The Vg And Lv Seprate by _ Not -)
 rsyslog 
 zabbix-agent (Install Zabbix Agent By Service Discovery)
 nexus (Local Registery)
