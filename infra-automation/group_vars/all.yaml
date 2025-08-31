@@ -1,13 +1,13 @@
 ### Global Configuration
-nesus_ip_address: "172.29.235.6:5000"
+nesus_ip_address: "192.168.1.105:5000"
 GLOBAL_USERSYS: 'ubuntu'
 GLOBAL_GROUPSYS: 'ubuntu'
 GLOBAL_VOLUME_PATH: '/home/ubuntu'
-GITLAB_URL: '192.168.1.120'
+GITLAB_URL: '192.168.1.109'
 
 os_2404: "zabbix-release_latest_7.0+ubuntu24.04_all.deb"
 os_2204: "zabbix-release_latest_7.0+ubuntu22.04_all.deb"
-zabbix_server_ip: 172.20.26.93,172.20.26.107
+zabbix_server_ip: 192.168.1.200,192.168.1.201
 
 ## Nexus Variable
 nexus_image: "sonatype/nexus3"
