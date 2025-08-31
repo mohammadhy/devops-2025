@@ -17,17 +17,17 @@ ansible: The Ansible automation tool. Installation Guide
 - [Contact](#Contact)
 ## Projects
 1. Python Web Application
-   ```
+   
    This Is A Simple Application That Need Redis.
-   ```
+   
 2. Example Vote
    
-   This Is A MonoRepo App You Can Find It Here [Example Vote](https://github.com/dockersamples/example-voting-app.git)
+   This Is A MonoRepo App You Can Find The Main Project Here [Example Vote](https://github.com/dockersamples/example-voting-app.git) But I Change It Some Feature Like Read Variable As Environment Not Hardcoded In The Code.
 
 3. Siggestion Api
-   ```
+   
    This Is A Api Application.
-   ```
+   
 ## UsageAnsible
 1. ansible
     ```bash
