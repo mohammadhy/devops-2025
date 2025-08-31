@@ -16,8 +16,8 @@ ansible: The Ansible automation tool. Installation Guide
 - [License](#license)
 - [Contact](#contact)
 
-## Usage
-1. infra-automation
+## Usage Ansible
+1. ansible
     ```bash
     cd infra-automation/
     # Fill Value Under group_vars/all.yaml
