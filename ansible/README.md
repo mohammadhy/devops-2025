@@ -34,14 +34,14 @@ patroni
 ```
 ### Other Services 
 
-- lvm (Detect All 80% Usage Disk And Resize It Only Works When The Vg And Lv Seprate by _ Not -)<sup> Optional </sup>
-+ rsyslog ()
+- lvm (Detect All 80% Usage Disk And Resize It Only Works When The Vg And Lv Seprate by _ Not -)`Optional`
 * zabbix-agent (Install Zabbix Agent By Service Discovery) `Optional`
-- nexus (Local Registery)
 + sonarqube (Check Code)`Optional`
 * zap (Security Scan) `Optinal`
+- k3s_ansible (Install k3s Cluster)`Optinal`
++ rsyslog ()`Optinal`
 - defectdojo (Centeralize Report)
 + requirment (Install Docker & Create Network Seprated On Docker And Put Log And Rotate On daemon.json)
 * vault (Config Valut)
-- k3s_ansible (Install k3s Cluster)`optinal`
+- nexus (Local Registery)
 
