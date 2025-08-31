@@ -20,6 +20,7 @@ kibana
 ### CI/CD:
 ```
 gitlab-pkg
+jenkins-pkg
 jenkins
 jenkins-agent
 ```
