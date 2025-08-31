@@ -11,7 +11,7 @@ ansible: The Ansible automation tool. Installation Guide
 
 ## Table of Contents
 - [Setup Ansible](#UsageAnsible)
-- [Projects](#Project)
+- [Projects](#Projects)
 - [Features](#features)
 - [License](#license)
 - [Contact](#Contact)
