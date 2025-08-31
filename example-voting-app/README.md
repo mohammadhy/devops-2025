@@ -9,9 +9,6 @@ A simple distributed application running across multiple Docker containers.
 This solution uses Python, Node.js, .NET, with Redis for messaging and Postgres for storage.
 
 ## Architecture
-
-![Architecture diagram](architecture.excalidraw.png)
-
 * A front-end web app in [Python](/vote) which lets you vote between two options
 * A [Redis](https://hub.docker.com/_/redis/) which collects new votes
 * A [.NET](/worker/) worker which consumes votes and stores them in…
