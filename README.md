@@ -10,7 +10,7 @@ A Kubernetes Cluster: You can use Minikube, Kind for local development, or a clo
 ansible: The Ansible automation tool. Installation Guide
 
 ## Table of Contents
-- [Installation Tools](#Usage)
+- [Setup Ansible](#Usage Ansible)
 - [Features](#features)
 - [Contributing](#contributing)
 - [License](#license)
