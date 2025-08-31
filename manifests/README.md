@@ -49,7 +49,9 @@
     sudo mv ./kubectl-argo-rollouts-darwin-amd64 /usr/local/bin/kubectl-argo 
     kubectl-argo rollouts version --kubeconfig 
 ## Find PID And DockerID
-    with top and htop we can find most pid use more cpu then on path /proc/<pid>/cpuset find containerID then on path /sys/fs/cgroup/system.slice/<containerID>
+     1 with top and htop we can find most pid use more cpu \
+     2 /proc/<pid>/cpuset find containerID \
+     3 /sys/fs/cgroup/system.slice/<containerID>
 ## SonarQube
    Create Key On Sonarqube
    Install Plugins On Jenkins
