@@ -1,4 +1,6 @@
-## setup insecure registry for containerd (DEPRECATED)
+> [!TIP]
+> setup insecure registry for containerd (DEPRECATED)
+```
        [plugins."io.containerd.grpc.v1.cri".registry]
       [plugins."io.containerd.grpc.v1.cri".registry.mirrors]
         [plugins."io.containerd.grpc.v1.cri".registry.mirrors."IP:PORT"]
@@ -8,8 +10,9 @@
         [plugins."io.containerd.grpc.v1.cri".registry.configs."IP:PORT".auth]
            password = "admin"
            username = "admin"
+```
 > [!TIP]
-> setup insecure registry for containerd (NEW)
+> setup insecure registry for containerd (NEW Version)
 ```
     vim /etc/containerd/certs.d/docker.io/hosts.toml
     server = "http://192.168.1.105:5000"
