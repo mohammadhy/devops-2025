@@ -10,14 +10,14 @@
            username = "admin"
 > [!TIP]
 > setup insecure registry for containerd (NEW)
-    vim /etc/containerd/certs.d/docker.io/hosts.toml
-    server = "http://192.168.1.105:5000"
-    [host."http://192.168.1.105:5000"]
-      capabilities = ["pull","resolve", "push"]
-      skip_verify = true
-      override_path = false
-      username = "admin"
-      password = "123"
+>    vim /etc/containerd/certs.d/docker.io/hosts.toml
+>    server = "http://192.168.1.105:5000"
+>    [host."http://192.168.1.105:5000"]
+>      capabilities = ["pull","resolve", "push"]
+>      skip_verify = true
+>      override_path = false
+>      username = "admin"
+>      password = "123"
 ## To Install Ceph As StorageClass:
     kubectl apply -f manifest/ceph
     kubectl apply -f https://raw.githubusercontent.com/ceph/ceph-csi/master/deploy/rbd/kubernetes/csi-provisioner-rbac.yaml
