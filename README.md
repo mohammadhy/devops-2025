@@ -44,7 +44,7 @@ ansible: The Ansible automation tool. Installation Guide
 - Manifest: On Manifest Direcctory It Has All Manifest That You Need On This Project
 - Project: Include 3 Different Project:  python-app & example-voting-app And suggestion_apiflask It Has Web Technology Database And More 
 - gitops: Include Gitops That Use Argocd To Deploy Automaticaly Under deploy-vote Directory
-- Automation: Under infra-automation Directory You Can Find Many Services That Written On Docker Format And Service Format
+- Automation: Under Ansible Directory You Can Find Many Services That Written On Docker Format And Service Format
 
 ## Contact
 Hassan Yousefi - [hassan.yosefi158@@gmail.com]
