@@ -1,5 +1,7 @@
 ### Suported Services
 Support Monitoring, Logging, Postgresql, Agents, Repository, CI/CD
+> [!IMPORTANT]
+> If You Want To Run My JenkinsFile Properly You Need At Least **jenkins** **gitlab-pkg** **nexus** **defectdojo** **vault**
 ### Monitoring: 
 ```
 falco 
