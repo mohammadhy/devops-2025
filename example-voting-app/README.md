@@ -4,7 +4,7 @@ A simple distributed application running across multiple Docker containers.
 
 ## Getting started
 
-docker built -t <registry>:5000 .
+* docker built -t <registry>:5000 <project>
 
 This solution uses Python, Node.js, .NET, with Redis for messaging and Postgres for storage.
 
