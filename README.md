@@ -1,4 +1,4 @@
-# Devsecops 🚀
+# DevSecops 🚀
 Getting Started
 Prerequisites
 To use the resources in this repository, you need the following tools installed on your local machine or CI/CD system:
