@@ -66,6 +66,8 @@
     snap install oras --classic
     oras cp ghcr.io/aquasecurity/trivy-db:2 --to-plain-http 192.168.1.104:5000/trivy/trivy-db:2
     TRIVY_USERNAME=YOUR_USERNAME TRIVY_PASSWORD=YOUR_PASSWORD trivy image --db-repository 192.168.1.104:5000/trivy/trivy-db:2 -f json -o trivy.json 192.168.1.104:5000/python-web-app:v1 
+    ### use Trivy Local DB
+    docker run --rm -v $PWD:/app -v /var/run/docker.sock:/var/run/docker.sock 192.168.1.5:5000/aquasec/trivy:0.58.0 image --db-repository $REGISTERY/aquasecurity/trivy-db:2 --java-db-repository $REGISTERY/aquasecurity/trivy-java-db:1 -f json -o /app/trivy.json  $REGISTERY/$IMAGE:$CI_COMMIT_SHORT_SHA'''
     
 ## Use Metrics-server 
     kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/high-availability-1.21+.yaml
