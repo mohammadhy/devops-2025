@@ -22,7 +22,7 @@ ansible: The Ansible automation tool. Installation Guide
    
 2. Example Vote
    
-   This Is A MonoRepo App You Can Find The Main Project Here [Example Vote](https://github.com/dockersamples/example-voting-app.git) But I Change It Some Feature Like Read Variable As Environment Not Hardcoded In The Code.
+   This Is A MonoRepo App You Can Find The Main Project Here [Example Vote](https://github.com/dockersamples/example-voting-app.git) But I Add It Some Feature Like Read Variable As Environment Not Hardcoded In The Code And Also NonRoot Dockerfile.
    
    <img width="500" height="300" alt="architecture excalidraw" src="https://github.com/user-attachments/assets/f5192dd1-4899-4002-87e0-e05fa81b4892" />
 
