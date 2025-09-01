@@ -5,7 +5,6 @@ pipeline {
       IMAGE = "${env.JOB_NAME}"
       PRODUCT_ID = '3'
       DOJO_URL = '192.168.1.104:8080'
-      ENGAGEMENT_ID = '3'
       PRODUCT_NAME = 'vote'
     }
     
@@ -25,6 +24,23 @@ pipeline {
             }
           }
         }
+
+        stage('Chose Right Eng ID'){
+          steps {
+            script {
+              if (env.GIT_TAG == "result"){
+                env.ENGAGEMENT_ID = '5'
+              }
+              if (env.GIT_TAG == "vote"){
+                env.ENGAGEMENT_ID = '6'
+              }
+              if (env.GIT_TAG == "worker"){
+                env.ENGAGEMENT_ID = '3'
+              }
+            }
+          }
+        }
+
         stage('git tag show'){
             steps {
               sh ''' echo $GIT_TAG '''
@@ -57,22 +73,22 @@ pipeline {
             } 
         }
 */
-
+/*
         stage('git secret'){
             steps {
-              sh ''' docker run  --rm  -v "/opt/jenkins_data/home/workspace/$IMAGE/$GIT_TAG:/repo" 192.168.1.105:5000/trufflehog:latest gitlab --repo="http://192.168.1.109/root/voting-app.git" --token="glpat-dWehPxCzqyE3B161PooQ" --json > trufflehog.json '''
+              sh ''' docker run  --rm  -v "/opt/jenkins_data/home/workspace/$IMAGE/$GIT_TAG:/repo" 192.168.1.105:5000/trufflehog:latest gitlab --repo="http://192.168.1.109/root/voting-app.git" --token="glpat-dWehPxCzqyE3B161PooQ" --json > $GIT_TAG/trufflehog.json '''
             } 
         }
-/*
+
         stage('Upload Scan Trufflehog') {
             steps {
                 withCredentials([vaultString(credentialsId: 'DOJO_KEY', variable: 'DOJO_KEY')]) {
-                sh ''' docker run --rm -v "/opt/jenkins_data/home/workspace/suggest-api:/repo"  $REGISTERY/defect-dojo:0.0.1 -url $DOJO_URL -api $DOJO_KEY -product-id $PRODUCT_ID -engagement-id $ENGAGEMENT_ID -scan-type "Trufflehog Scan" -engagement_name $IMAGE -file-path /repo/trufflehog.json -product-name $PRODUCT_NAME '''
+                sh ''' docker run --rm -v "/opt/jenkins_data/home/workspace/$IMAGE/$GIT_TAG:/repo"  $REGISTERY/defect-dojo:0.0.1 -url $DOJO_URL -api $DOJO_KEY -product-id $PRODUCT_ID -engagement-id $ENGAGEMENT_ID -scan-type "Trufflehog Scan" -engagement_name $GIT_TAG -file-path /repo/trufflehog.json -product-name $PRODUCT_NAME '''
                 }
             }
         }
-*/
 
+*/
         stage('git leaks'){
             steps {
               catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
@@ -80,15 +96,15 @@ pipeline {
               }
             }
         }
-/*
+
         stage('Upload Scan Gitleaks') {
             steps {
                 withCredentials([vaultString(credentialsId: 'DOJO_KEY', variable: 'DOJO_KEY')]) {
-                  sh ''' docker run --rm -v "/opt/jenkins_data/home/workspace/suggest-api:/repo"  $REGISTERY/defect-dojo:0.0.1 -url $DOJO_URL -api $DOJO_KEY -product-id $PRODUCT_ID -engagement-id $ENGAGEMENT_ID -scan-type "Gitleaks Scan" -engagement_name $IMAGE -file-path /repo/gitleaks.json -product-name $PRODUCT_NAME '''
+                  sh ''' docker run --rm -v "/opt/jenkins_data/home/workspace/$IMAGE/$GIT_TAG:/repo"  $REGISTERY/defect-dojo:0.0.1 -url $DOJO_URL -api $DOJO_KEY -product-id $PRODUCT_ID -engagement-id $ENGAGEMENT_ID -scan-type "Gitleaks Scan" -engagement_name $GIT_TAG -file-path /repo/gitleaks.json -product-name $PRODUCT_NAME '''
                 }
             }
         }
-*/
+
 /*
         stage('Sonar-Scanner') {
             steps {
@@ -112,42 +128,40 @@ pipeline {
                 }
             }
         }
+        stage('Push To Docker Registries') {
+            steps {
+              sh ''' docker push $REGISTERY/$GIT_TAG:$CI_COMMIT_SHORT_SHA '''
+            }
+        }
 /*
         stage('grype'){
             steps {
               catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                sh ''' docker run --rm  -v /var/run/docker.sock:/var/run/docker.sock --name Grype 192.168.1.105:5000/grype:v0.86.1 -o json $REGISTERY/$GIT_TAG:$CI_COMMIT_SHORT_SHA > grype.json '''
+                sh ''' docker run --rm -v "/opt/jenkins_data/home/workspace/$IMAGE/$GIT_TAG:/repo" -v /var/run/docker.sock:/var/run/docker.sock --name Grype 192.168.1.105:5000/grype:v0.86.1  $REGISTERY/$GIT_TAG:$CI_COMMIT_SHORT_SHA -o json --file /repo/grype.json '''
                 }
               }
         }
-/*
+
         stage('Upload Scan grype') {
             steps {
-                script {
-                    sh ''' docker run --rm -v "/opt/jenkins_data/home/workspace/$IMAGE:/repo"  $REGISTERY/defect-dojo:0.0.1 -url $DOJO_URL -api $DOJO_KEY -product-id $PRODUCT_ID -engagement-id $ENGAGEMENT_ID -scan-type "Anchore Grype" -engagement_name $IMAGE -file-path /repo/gitleaks.json -product-name $PRODUCT_NAME '''
+              withCredentials([vaultString(credentialsId: 'DOJO_KEY', variable: 'DOJO_KEY')]) {
+                    sh ''' docker run --rm -v "/opt/jenkins_data/home/workspace/$IMAGE/$GIT_TAG:/repo"  $REGISTERY/defect-dojo:0.0.1 -url $DOJO_URL -api $DOJO_KEY -product-id $PRODUCT_ID -engagement-id $ENGAGEMENT_ID -scan-type "Anchore Grype" -engagement_name $GIT_TAG -file-path /repo/grype.json -product-name $PRODUCT_NAME '''
                 }
             }
         }
+
 */
-/*
         stage('Trivy'){ 
             steps{
-                sh ''' docker run --rm -v $PWD:/app -v /var/run/docker.sock:/var/run/docker.sock $REGISTERY/trivy image -f json -o /app/trivy.json  $REGISTERY/$GIT_TAG:$CI_COMMIT_SHORT_SHA'''
+                sh ''' docker run --rm -v /opt/jenkins_data/home/workspace/$IMAGE/$GIT_TAG:/app -v /var/run/docker.sock:/var/run/docker.sock 192.168.1.105:5000/trivy:latest image --db-repository $REGISTERY/trivy-db:2 --java-db-repository $REGISTERY/trivy-java-db:1 -f json -o /app/trivy.json  $REGISTERY/$GIT_TAG:$CI_COMMIT_SHORT_SHA'''
             }
         }
-/*
+
         stage('Upload Scan Trivy') {
             steps {
-                script {
-                    sh ''' docker run -v "$PWD:/repo"  $REGISTERY/defect-dojo:0.0.1 -url $DOJO_URL -api $DOJO_KEY -product-id $PRODUCT_ID -engagement-id $ENGAGEMENT_ID -scan-type "Trivy Scan" -engagement_name $IMAGE -file-path /repo/trivy.json -product-name $PRODUCT_NAME '''
+              withCredentials([vaultString(credentialsId: 'DOJO_KEY', variable: 'DOJO_KEY')]) {
+                    sh ''' docker run -v "/opt/jenkins_data/home/workspace/$IMAGE/$GIT_TAG:/repo"  $REGISTERY/defect-dojo:0.0.1 -url $DOJO_URL -api $DOJO_KEY -product-id $PRODUCT_ID -engagement-id $ENGAGEMENT_ID -scan-type "Trivy Scan" -engagement_name $GIT_TAG -file-path /repo/trivy.json -product-name $PRODUCT_NAME '''
                 }
-            }
-        }
-*/
-
-        stage('Push To Docker Registries') {
-            steps {
-              sh ''' docker push $REGISTERY/$GIT_TAG:$CI_COMMIT_SHORT_SHA '''
             }
         }
         stage('Create Artifact') {
