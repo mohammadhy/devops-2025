@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgresql
+  namespace: argocd
+spec:
+  destination:
+    namespace: postgres-db
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: ./postgresql
+    repoURL: http://192.168.1.109/root/voting-app-requirment.git
+    targetRevision: HEAD
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true  
+    automated:
+      prune: true
+      selfHeal: true
