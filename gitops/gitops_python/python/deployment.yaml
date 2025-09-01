@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-web-deployment
+  namespace: python-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-web
+  template:
+    metadata:
+      labels:
+        app: python-web
+    spec:
+      containers:
+        - name: python-web
+          image: 192.168.1.105:5000/python:v1
+          resources:
+            limits:
+              memory: "300Mi"
+              cpu: "100m"
+            requests:
+              memory: "50Mi"
+              cpu: "50m"
+          env:
+          - name: REDIS_URL
+            value: "redis.redis-cache"
+          ports:
+          - name: web-port
+            containerPort: 80
