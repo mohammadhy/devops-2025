@@ -2,6 +2,8 @@
 
 ## What Do We Have Here? 
 Before We Start Make Sure Your Kubernetes Cluster Up And Running If It's Not Follow Link [Installation Guide](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
+We Have Cover CI/CD On Different Type Of Git Architectures Such As MonoRepo And Multi Repo.
+On CI As Musch As Possible We Cover Everything That You Need Even On Production Like Find Leaks, Check Dockerfile And Trivy.
 
 To use the resources in this repository, you need the following tools installed on your local machine or CI/CD system:
 A Kubernetes Cluster: You can use Minikube, Kind for local development, or a cloud provider (EKS, GKE, AKS).
