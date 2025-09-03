@@ -12,8 +12,14 @@ Before We Start Make Sure Your Kubernetes Cluster Up And Running If It's Not Fol
 <img width="1849" height="216" alt="pipeline" src="https://github.com/user-attachments/assets/8a4a10a6-4106-4d4d-8ecd-05678cd7b6ba" />
 4. All tools run on Docker, each with its own Ansible playbook/role.
 5. For Key Secret Management We Use Vault To Protect Our Keys.
-6. For Logging We Cover Filebeat, Logstash And Elasticsearch.
-7. For Monitoring We Cover Prometheus, Zabbix And Also We Can Sends Alerts To Mattermost.
+6. For Logging We Cover
+   - Filebeat
+   - Logstash
+   - Elasticsearch
+8. For Monitoring
+   - Prometheus
+   - Zabbix
+   - Mattermost
 
 
 ## Table of Contents
