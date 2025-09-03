@@ -51,3 +51,5 @@ ansible: The Ansible automation tool. Installation Guide
 ## Contact
 Hassan Yousefi - [hassan.yosefi158@@gmail.com]
 
+## licence
+Apache License 2.0
