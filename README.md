@@ -5,6 +5,7 @@ Before We Start Make Sure Your Kubernetes Cluster Up And Running If It's Not Fol
 1. We Have Cover CI/CD On Different Type Of Git Architectures Such As:
    - MonoRepo 
    - Multi Repo
+
 ![monorepo-vs-multirepo](https://github.com/user-attachments/assets/757f21b2-4870-4279-b529-375e6f0f8f3a)
 
 3. We Discover As Musch As Possible We Cover Everything That You Need Even On Production Like Find Leaks, Check Dockerfile And Trivy.
