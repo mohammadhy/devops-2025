@@ -8,7 +8,7 @@ Before We Start Make Sure Your Kubernetes Cluster Up And Running If It's Not Fol
 
 ![monorepo-vs-multirepo](https://github.com/user-attachments/assets/757f21b2-4870-4279-b529-375e6f0f8f3a)
 
-2. We Discover As Musch As Possible Everything That You Need Even On Production Like Find Leaks, Check Dockerfile And Trivy.
+2. We Discover As Musch As Possible Everything That You Need Even On Production Like Find Leaks, Check Dockerfile And Trivy Also You Can Collects All Reports On [DefectDojo](https://defectdojo.com/).
 
 To use the resources in this repository, you need the following tools installed on your local machine or CI/CD system:
 A Kubernetes Cluster: You can use Minikube, Kind for local development, or a cloud provider (EKS, GKE, AKS).
