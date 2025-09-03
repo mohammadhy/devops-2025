@@ -1,7 +1,8 @@
 # 🚀 Getting Started
+> [!NOTE]
+> Before We Start Make Sure Your Kubernetes Cluster Up And Running If It's Not Follow Link [Installation Guide](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
 
 ## What Do We Have Here? 
-Before We Start Make Sure Your Kubernetes Cluster Up And Running If It's Not Follow Link [Installation Guide](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
 1. We Have Cover CI/CD On Different Type Of Git Architectures Such As:
    - MonoRepo 
    - Multi Repo
