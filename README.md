@@ -36,7 +36,7 @@
 ## Projects
 1. Python Web Application
    
-   This Is A Simple Application That Need Redis.
+   This Is A Simple Application That Needs Redis.
    
 2. Example Vote
    
