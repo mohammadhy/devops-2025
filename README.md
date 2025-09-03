@@ -10,10 +10,10 @@ Before We Start Make Sure Your Kubernetes Cluster Up And Running If It's Not Fol
 
 2. We Discover As Musch As Possible Everything That You Need Even On Production Like Find Leaks, Check Dockerfile And Trivy Also You Can Collects All Reports On [DefectDojo](https://defectdojo.com/).
 <img width="1849" height="216" alt="pipeline" src="https://github.com/user-attachments/assets/8a4a10a6-4106-4d4d-8ecd-05678cd7b6ba" />
-
 4. All tools run on Docker, each with its own Ansible playbook/role.
-5. We Have Vault (Secret Manager) To Protect Our Keys.
-6. For Logging, Monitoring We Cover Prometheus And Zabbix , Elasticsearch And Also We Can Sends Alerts To Mattermost.
+5. For Key Secret Management We Use Vault To Protect Our Keys.
+6. For Logging We Cover Filebeat, Logstash And Elasticsearch.
+7. For Monitoring We Cover Prometheus, Zabbix And Also We Can Sends Alerts To Mattermost.
 
 
 ## Table of Contents
