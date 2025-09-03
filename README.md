@@ -12,7 +12,6 @@ Before We Start Make Sure Your Kubernetes Cluster Up And Running If It's Not Fol
 <img width="1849" height="216" alt="pipeline" src="https://github.com/user-attachments/assets/8a4a10a6-4106-4d4d-8ecd-05678cd7b6ba" />
 3. All tools run on Docker, each with its own Ansible playbook/role.
 4. For Key Secret Management We Use Vault To Protect Our Keys.
-
 5. For Logging:
    - Filebeat
    - Logstash
