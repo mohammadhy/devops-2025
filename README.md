@@ -2,11 +2,8 @@
 
 ## Prerequisites
 To use the resources in this repository, you need the following tools installed on your local machine or CI/CD system:
-
 kubectl: The Kubernetes command-line tool. Installation Guide
-
 A Kubernetes Cluster: You can use Minikube, Kind for local development, or a cloud provider (EKS, GKE, AKS).
-
 ansible: The Ansible automation tool. Installation Guide
 
 ## Table of Contents
