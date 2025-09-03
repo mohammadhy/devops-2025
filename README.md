@@ -23,7 +23,7 @@
    - Prometheus
    - Zabbix
    - Mattermost
-
+7. We Connect **Ceph** To Kubernetes Cluster As StorageClass.
 
 ## Table of Contents
 - [Setup Ansible](#UsageAnsible)
