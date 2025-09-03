@@ -9,9 +9,11 @@ Before We Start Make Sure Your Kubernetes Cluster Up And Running If It's Not Fol
 ![monorepo-vs-multirepo](https://github.com/user-attachments/assets/757f21b2-4870-4279-b529-375e6f0f8f3a)
 
 2. We Discover As Musch As Possible Everything That You Need Even On Production Like Find Leaks, Check Dockerfile And Trivy Also You Can Collects All Reports On [DefectDojo](https://defectdojo.com/).
-3. All tools run on Docker, each with its own Ansible playbook/role.
-4. We Have Vault (Secret Manager) To Protect Our Keys.
-5. For Logging, Monitoring We Cover Prometheus And Zabbix , Elasticsearch And Also We Can Sends Alerts To Mattermost.
+<img width="1849" height="216" alt="pipeline" src="https://github.com/user-attachments/assets/8a4a10a6-4106-4d4d-8ecd-05678cd7b6ba" />
+
+4. All tools run on Docker, each with its own Ansible playbook/role.
+5. We Have Vault (Secret Manager) To Protect Our Keys.
+6. For Logging, Monitoring We Cover Prometheus And Zabbix , Elasticsearch And Also We Can Sends Alerts To Mattermost.
 
 
 ## Table of Contents
