@@ -24,7 +24,7 @@
    - Zabbix
    - Mattermost
 7. We Connect **Ceph** To Kubernetes Cluster As StorageClass.
-8. We Have **Keycloak** As SSO If You Don't Have Any Idea How To Connect It To K8s Follow [Keycloak](https://medium.com/@hassan.yosefi158/how-use-keycloak-for-k8s-ae79a42a6881)
+8. We Have **Keycloak** As SSO If You Don't Have Any Idea How To Connect It To Your K8s Follow [Keycloak](https://medium.com/@hassan.yosefi158/how-use-keycloak-for-k8s-ae79a42a6881)
 
 ## Table of Contents
 - [Setup Ansible](#UsageAnsible)
