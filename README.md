@@ -25,6 +25,7 @@
    - Mattermost
 7. We Connect **Ceph** To Kubernetes Cluster As StorageClass.
 8. We Have **Keycloak** As SSO If You Don't Have Any Idea How To Connect It To Your K8s Follow [Keycloak](https://medium.com/@hassan.yosefi158/how-use-keycloak-for-k8s-ae79a42a6881)
+9. For CD We Use **Argocd** Our Gitops Directory Contains Many Repository For Application Or Even Configuration Like **Filebeat**.
 
 ## Table of Contents
 - [Setup Ansible](#UsageAnsible)
