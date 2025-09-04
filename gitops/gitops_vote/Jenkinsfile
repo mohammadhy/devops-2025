@@ -28,13 +28,6 @@ pipeline {
             }
           }
         }
-        stage('Login Register'){
-            steps{
-                sh ''' 
-                       docker login 192.168.1.105:5000 -u admin -p123
-                   '''
-            }
-        }
         stage('Check Dockerfile'){
             steps {
               catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
