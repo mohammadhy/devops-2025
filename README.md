@@ -1,7 +1,12 @@
 # 🚀 Getting Started
 > [!NOTE]
 > Before We Start Make Sure Your Kubernetes Cluster Up And Running If It's Not Follow Link [Installation Guide](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
-![New tag · Administrator _ voting-app · GitLab - Google Chrome 2025-09-04 18-33-08](https://github.com/user-attachments/assets/99424d27-5caa-4a5d-8e9f-b59239251ea1)
+
+
+
+https://github.com/user-attachments/assets/5788732f-38a3-4f43-bd42-ff3a2d59b4f0
+
+
 
 ## What Do We Have Here? 
 1. We Have Cover CI/CD On Different Type Of Git Architectures Such As:
