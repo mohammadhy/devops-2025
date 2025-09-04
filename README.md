@@ -60,7 +60,7 @@
     vim inventory.yaml
     # Select Service That You Need
     vim ansible-playbook.yaml
-    ansible-playbook -i inventory.yaml ansible-playbook -K
+    ansible-playbook -i inventory.yaml ansible-playbook -K --skip-tags down
      ``` 
 ## Features
 - Manifest: On Manifest Direcctory It Has All Manifest That You Need On This Project
