@@ -2,8 +2,18 @@ input {
   beats {
     type => "beats"
     port => 5044
+    tags => [ 'kubernetes' ]
   }
-
+  beats {
+    type => "beats"
+    port => 5046
+    tags => [ 'docker' ]
+  }
+  beats {
+    type => "beats"
+    port => 5047
+    tags => [ 'audit-k8s' ]
+  }
   syslog {
     port => 514
     type => "syslog"
@@ -11,14 +21,25 @@ input {
 }
 
 filter {
-  if [type] == "beats" {
+  if "docker" in [tags] {
     grok {
       match => {
         "message" => '%{IPORHOST:host_name} - - \[%{HTTPDATE:access_time}\] "%{WORD:http_method} %{DATA:url} HTTP/%{NUMBER:http_version}" %{NUMBER:response_code} %{NUMBER:body_sent_byte} "-" "%{DATA:referrer}" "-"'
       }
       remove_field => ["message"]
     }
-if [kubernetes][node][uid] {
+    mutate {
+      add_field => { "host_ip" => "%{[@metadata][ip]}" }
+    }
+  }
+  else if "kubernetes" in [tags] {
+    grok {
+      match => {
+        "message" => '%{IPORHOST:host_name} - - \[%{HTTPDATE:access_time}\] "%{WORD:http_method} %{DATA:url} HTTP/%{NUMBER:http_version}" %{NUMBER:response_code} %{NUMBER:body_sent_byte} "-" "%{DATA:referrer}" "-"'
+      }
+      remove_field => ["message"]
+    }
+    if [kubernetes][node][uid] {
       mutate {
         replace => { "[kubernetes][node][uid]" => "********" }
       }
@@ -67,30 +88,45 @@ if [kubernetes][node][uid] {
       }
       remove_field => ["message"]
     }
-
-    # Add host-based index prefix for syslog
     mutate {
       add_field => { "[@metadata][index_prefix]" => "syslog-%{[host]}" }
     }
   }
 }
-
 output {
-  if [type] == "beats" {
+    if "docker" in [tags] {
     elasticsearch {
-      hosts => ["http://192.168.4.198:9200"]
+      hosts => ["http://192.168.1.113:9200"]
       ssl_certificate_verification => false
       user => "elastic"
       password => "asus1650"
-      index => "filebeat-docker-%{+YYYY.MM.dd}"
+      index => "docker-%{[@metadata][ip]}-%{+YYYY.MM.dd}"
+    }
+  }
+  else if "kubernetes" in [tags] {
+    elasticsearch {
+      hosts => ["http://192.168.1.113:9200"]
+      ssl_certificate_verification => false
+      user => "elastic"
+      password => "asus1650"
+      index => "k8s-%{+YYYY.MM.dd}"
     }
   } else if [type] == "syslog" {
     elasticsearch {
-      hosts => ["http://192.168.4.198:9200"]
+      hosts => ["http://192.168.1.113:9200"]
       ssl_certificate_verification => false
       user => "elastic"
       password => "asus1650"
       index => "%{[@metadata][index_prefix]}-%{+YYYY.MM.dd}"
     }
-  }
+
+  }else if "audit-k8s" in [tags] {
+    elasticsearch {
+      hosts => ["http://192.168.1.113:9200"]
+      ssl_certificate_verification => false
+      user => "elastic"
+      password => "asus1650"
+      index => "audit-k8s%{+YYYY.MM.dd}"
+    }
+   }
 }
