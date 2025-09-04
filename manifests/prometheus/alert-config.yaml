@@ -20,35 +20,19 @@ stringData:
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 12h
-      receiver: webhook
+      receiver: slack-notifications
       routes:
       - receiver: slack-notifications
         match:
           severity: critical
-      - receiver: mattermost
-        match: 
-          severity: warning
-      - receiver: webhook
+      - receiver: alert
         match:
-          severity: warning
+          ns: python-web
     receivers:
-    - name: webhook
-      webhook_configs:
-      - url: "http://192.168.1.170:5000/webhook"
-        send_resolved: true
-    - name: mattermost
+    - name: alert
       slack_configs:
       - send_resolved: true
-        api_url: "https://192.168.1.103:444/hooks/forbxq3octy9mbp5hcxk9nfbje"
-        title: '{{ template "slack.default.title" . }}'
-        color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
-        pretext: '{{ .CommonAnnotations.summary }}'
-    - name: slack-notifications
-      slack_configs:
-      - channel: "#stage-locl"
-        send_resolved: true
-        api_url: "https://hooks.slack.com/services/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"
-          #text: "{{ range .Alerts }}<!channel> {{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}"
+        api_url: "https://192.168.1.103:444/hooks/haqgi6ir6inj9fen994t3yyqmw"
         title: '{{ template "slack.default.title" . }}'
         color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
         pretext: '{{ .CommonAnnotations.summary }}'
