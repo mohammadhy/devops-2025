@@ -19,6 +19,8 @@
    - Filebeat
    - Logstash
    - Elasticsearch
+<img width="1633" height="706" alt="IDE · Administrator _ python-app · GitLab - Google Chrome 9_4_2025 6_45_36 PM" src="https://github.com/user-attachments/assets/7d5528f3-70ca-4d59-8ff1-6a1e1f07070d" />
+
 6. For Monitoring:
    - Prometheus
    - Zabbix
