@@ -86,3 +86,7 @@
 ## To Have App In App Argocd 
    
    argocd app create app-of-app-voting --dest-namespace argocd --dest-server https://kubernetes.default.svc --repo http://192.168.1.109/root/voting-app-requirment.git --path ./argo_app_in_app/ --sync-policy auto
+
+## Backup & Restore
+    sudo ETCDCTL_API=3 etcdctl --endpoints 192.168.1.170:2379   --cert=/etc/ssl/etcd/ssl/node-kubernetes.pem   --key=/etc/ssl/etcd/ssl/node-kubernetes-key.pem   --cacert=/etc/ssl/etcd/ssl/ca.pem   snapshot save /home/user/backup
+   
